@@ -1,8 +1,6 @@
 # Iridium
 
 ## kotlin jar-in-jars made easy
-<br>
-<br>
 
 <details>
 <summary>Iridium Usage</summary>
@@ -23,7 +21,6 @@ pluginManagement {
 ```kotlin
 plugins {
     id("org.teamvoided.iridium") version "1.1.0"
-    id("iridium.project.parent-script")
     //maven publishing id("iridium.project.publish-script")
 }
 ```
