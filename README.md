@@ -49,6 +49,7 @@ plugins {
 
 <details>
 <summary>Mod Build Script</summary>
+
 # The Mod Build Script plugin will auto generate a mod json for you
 ### here are the properties
 - modId (the mod id as a string)
