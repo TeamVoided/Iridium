@@ -102,7 +102,7 @@ val examplePropertyName by extra("examplePropertyValue")
 ```
 </details>
 
-## This is cool and all but what if I want one of my modules to depend on another
+### This is cool and all but what if I want one of my modules to depend on another
 #### Well fret not, you can simply use the "dependencyHelper" extension provided by the mod build script
 ###### Here's an example
 ```kotlin
