@@ -3,7 +3,6 @@ package org.teamvoided.iridium.mod
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.teamvoided.iridium.config.Config
 import org.teamvoided.iridium.config.Config.authors
 import org.teamvoided.iridium.config.Config.discordServerInviteId
 import org.teamvoided.iridium.config.Config.fabricApiVersion
@@ -65,6 +64,9 @@ dependencies {
     modImplementation("net.fabricmc:fabric-language-kotlin:$fabricLangKotlinVersion")
 }
 
+val buildScriptExtension: BuildScriptExtension = extensions.create("modSettings", BuildScriptExtension::class.java)
+extensions.create("dependencyHelper", DependencyHelperExtension::class.java)
+
 @Serializable
 data class ModConfiguration(
     val schemaVersion: Int,
@@ -106,81 +108,83 @@ data class ModConfiguration(
     }
 }
 
-val modId: String by extra(Config.modId)
-val modName: String by extra(modId)
-val modEntrypoints: LinkedHashMap<String, List<String>>? by extra(null)
-val modMixinFiles: List<String>? by extra(null)
-val modDepends: LinkedHashMap<String, String>? by extra(null)
-val isModParent by extra(false)
-val modParent: String? = if (!isModParent) Config.modId else null
-val customModIcon: String? by extra
+afterEvaluate {
+    val modId = buildScriptExtension.modId()
+    val modName = buildScriptExtension.modName()
+    val modEntrypoints = buildScriptExtension.entrypoints()
+    val modMixinFiles = buildScriptExtension.mixinFiles()
+    val modDepends = buildScriptExtension.dependencies()
+    val isModParent = buildScriptExtension.isModParent()
+    val modParent = buildScriptExtension.modParent()
+    val customModIcon: String? = buildScriptExtension.customIcon()
 
-tasks {
-    val creditsTask = register("iridiumCredits") {
-        val credits = "$modName was built with the Iridium gradle plugin developed by TeamVoided over at https://teamvoided.org"
-        val creditsFile = buildDir.resolve("resources/main/credits.iridium")
+    tasks {
+        val creditsTask = register("iridiumCredits") {
+            val credits = "$modName was built with the Iridium gradle plugin developed by TeamVoided over at https://teamvoided.org"
+            val creditsFile = buildDir.resolve("resources/main/credits.iridium")
 
-        inputs.property("credits", credits)
-        outputs.file(creditsFile)
+            inputs.property("credits", credits)
+            outputs.file(creditsFile)
 
-        doFirst {
-            if (!creditsFile.exists()) {
-                creditsFile.parentFile.mkdirs()
-                creditsFile.createNewFile()
+            doFirst {
+                if (!creditsFile.exists()) {
+                    creditsFile.parentFile.mkdirs()
+                    creditsFile.createNewFile()
+                }
+
+                creditsFile.writeText(credits)
             }
 
-            creditsFile.writeText(credits)
         }
 
-    }
+        val modJsonTask = register("modJson") {
+            val modConfig = ModConfiguration(
+                1,
+                modId,
+                project.version.toString(),
+                modName,
+                project.description.toString(),
+                authors,
+                modEntrypoints.mapValuesTo(LinkedHashMap()) {
+                    it.value.map { target -> ModConfiguration.Entrypoint("kotlin", target) }
+                },
+                modMixinFiles,
+                linkedMapOf(
+                    "fabric-api" to "*",
+                    "fabric-language-kotlin" to ">=1.8.0+kotlin.1.7.0",
+                    "minecraft" to "${majorMinecraftVersion}.x"
+                ).apply { putAll(modDepends) },
+                ModConfiguration.Contact(
+                    "https://github.com/$githubRepo",
+                    "https://github.com/$githubRepo/issues",
+                    "https://github.com/$githubRepo",
+                    "https://discord.gg/$discordServerInviteId"
+                ),
+                license,
+                if (modId.endsWith("-all")) "assets/$modId/icon.png" else customModIcon,
+                if (isModParent) null else ModConfiguration.Custom(ModConfiguration.Custom.ModMenu(modParent!!)),
+            )
 
-    val modJsonTask = register("modJson") {
-        val modConfig = ModConfiguration(
-            1,
-            modId,
-            project.version.toString(),
-            modName,
-            project.description.toString(),
-            authors,
-            modEntrypoints?.mapValuesTo(LinkedHashMap()) {
-                it.value.map { target -> ModConfiguration.Entrypoint("kotlin", target) }
-            } ?: linkedMapOf(),
-            modMixinFiles ?: emptyList(),
-            linkedMapOf(
-                "fabric-api" to "*",
-                "fabric-language-kotlin" to ">=1.8.0+kotlin.1.7.0",
-                "minecraft" to "${majorMinecraftVersion}.x"
-            ).apply { putAll(modDepends ?: emptyMap()) },
-            ModConfiguration.Contact(
-                "https://github.com/$githubRepo",
-                "https://github.com/$githubRepo/issues",
-                "https://github.com/$githubRepo",
-                "https://discord.gg/$discordServerInviteId"
-            ),
-            license,
-            if (modId.endsWith("-all")) "assets/$modId/icon.png" else if (customModIcon != null) customModIcon!! else null,
-            if (isModParent) null else ModConfiguration.Custom(ModConfiguration.Custom.ModMenu(modParent!!)),
-        )
+            val modDotJson = buildDir.resolve("resources/main/fabric.mod.json")
 
-        val modDotJson = buildDir.resolve("resources/main/fabric.mod.json")
+            inputs.property("modConfig", modConfig.toString())
+            outputs.file(modDotJson)
 
-        inputs.property("modConfig", modConfig.toString())
-        outputs.file(modDotJson)
+            doFirst {
+                val prettyJson = Json { prettyPrint = true }
 
-        doFirst {
-            val prettyJson = Json { prettyPrint = true }
+                if (!modDotJson.exists()) {
+                    modDotJson.parentFile.mkdirs()
+                    modDotJson.createNewFile()
+                }
 
-            if (!modDotJson.exists()) {
-                modDotJson.parentFile.mkdirs()
-                modDotJson.createNewFile()
+                modDotJson.writeText(prettyJson.encodeToString(modConfig))
             }
-
-            modDotJson.writeText(prettyJson.encodeToString(modConfig))
         }
-    }
 
-    processResources {
-        dependsOn(creditsTask)
-        dependsOn(modJsonTask)
+        processResources {
+            dependsOn(creditsTask)
+            dependsOn(modJsonTask)
+        }
     }
 }

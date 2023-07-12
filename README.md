@@ -20,7 +20,7 @@ pluginManagement {
 ## root build.gradle.kts
 ```kotlin
 plugins {
-    id("org.teamvoided.iridium") version "1.1.1"
+    id("org.teamvoided.iridium") version "1.2.0"
     //maven publishing id("iridium.project.publish-script")
 }
 ```
@@ -45,7 +45,43 @@ plugins {
 </details>
 
 <details>
-<summary>Mod Build Script</summary>
+<summary>The JarInJar Script</summary>
+
+## This is what you came here for right???
+#### The Jar In Jar script will automatically add all modules defined in the iridium config file to the fabric "include" gradle configuration which will automatically add them to ur jar
+
+</details>
+
+<details>
+<summary>Mod Build Script V1.2.0+</summary>
+
+# The Mod Build Script plugin will auto generate a mod json for you
+## As of iridium version 1.2.0 a clojure is used to define its properties
+###### To set the description/version you still use the default project.description/version properties
+
+### Here's an example
+```kotlin
+plugins {
+    kotlin("jvm") version "1.9.0"
+    kotlin("plugin.serialization") version "1.9.0"
+    id("iridium.mod.build-script")
+}
+
+modSettings {
+    modId("example-mod")
+    modName("Example Mod")
+    // other properties
+}
+
+base.archivesName.set("example-mod")
+version = project.properties["mod_version"] as String
+description = "Example Mod Description"
+group = project.properties["maven_group"] as String
+```
+</details>
+
+<details>
+<summary>Mod Build Script V1.1.1 and under</summary>
 
 # The Mod Build Script plugin will auto generate a mod json for you
 ### here are the properties
@@ -65,3 +101,17 @@ plugins {
 val examplePropertyName by extra("examplePropertyValue")
 ```
 </details>
+
+## This is cool and all but what if I want one of my modules to depend on another
+#### Well fret not, you can simply use the "dependencyHelper" extension provided by the mod build script
+###### Here's an example
+```kotlin
+plugins {
+    //other stuff
+    id("iridium.mod.build-script")
+}
+
+dependencies {
+    implementation(dependencyHelper.modProject(":some-module"))
+}
+```

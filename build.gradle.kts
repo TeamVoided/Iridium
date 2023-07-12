@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "org.teamvoided.iridium"
-version = "1.1.1"
+version = "1.2.0"
 
 repositories {
     mavenCentral()
@@ -50,11 +50,6 @@ gradlePlugin {
         create("iridium-mod-jar-in-jar") {
             id = "iridium.mod.jar-in-jar"
             implementationClass = "org.teamvoided.iridium.mod.JarInJarPlugin"
-        }
-
-        create("iridium-parent-project-script") {
-            id = "iridium.project.parent-script"
-            implementationClass = "org.teamvoided.iridium.project.ParentScriptPlugin"
         }
 
         create("iridium-project-publish-script") {

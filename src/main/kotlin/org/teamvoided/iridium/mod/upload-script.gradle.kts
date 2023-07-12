@@ -11,20 +11,25 @@ plugins {
     id("com.modrinth.minotaur")
 }
 
-val modrinthId: String by extra
+val uploadScriptExtension = extensions.create("modrinthConfig", UploadScriptExtension::class.java)
 
-modrinth {
-    token.set(findProperty("modrinth.token").toString())
+afterEvaluate {
+    val modrinthId = uploadScriptExtension.modrinthId() ?: throw IllegalStateException("property \"modrinthId\" cannot be null")
+    val customSysProperty = uploadScriptExtension.customModrinthTokenProperty()
 
-    projectId.set(modrinthId)
-    versionNumber.set(rootProject.version.toString())
-    versionType.set(projectState)
-    gameVersions.set(listOf(minecraftVersion))
-    loaders.set(listOf("fabric"))
+    modrinth {
+        token.set(findProperty(if (customSysProperty != null) customSysProperty else "modrinth.token").toString())
 
-    uploadFile.set(tasks.remapJar.get())
+        projectId.set(modrinthId)
+        versionNumber.set(rootProject.version.toString())
+        versionType.set(projectState)
+        gameVersions.set(listOf(minecraftVersion))
+        loaders.set(listOf("fabric"))
 
-    if (modrinthDependencies.isNotEmpty()) {
-        dependencies.set(modrinthDependencies.map { it.toModrinthApiType() })
+        uploadFile.set(tasks.remapJar.get())
+
+        if (modrinthDependencies.isNotEmpty()) {
+            dependencies.set(modrinthDependencies.map { it.toModrinthApiType() })
+        }
     }
 }
