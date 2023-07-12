@@ -22,7 +22,7 @@ pluginManagement {
 ## root build.gradle.kts
 ```kotlin
 plugins {
-    id("org.teamvoided.iridium") version "1.1.0"
+    id("org.teamvoided.iridium") version "1.1.1"
     id("iridium.project.parent-script")
     //maven publishing id("iridium.project.publish-script")
 }
@@ -59,6 +59,8 @@ plugins {
 - modDepends (the dependencies of the mod as a LinkedHashMap of String and String where the initial string is the mod id and the secondary string is the version of the dependency)
 - isModParent (if this is the parent of all the other mods (if it is a jar-in-jar mod [boolean])
 - customModIcon (a custom icon for the mod defaults to "assets/{modId}/icon.png)"
+
+## To set the description/version use the default project.description/version properties
 
 ## Setting a property in the gradle build script
 ```kotlin

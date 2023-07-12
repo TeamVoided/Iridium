@@ -107,7 +107,7 @@ data class ModConfiguration(
 }
 
 val modId: String by extra(Config.modId)
-val modName: String by extra
+val modName: String by extra(modId)
 val modEntrypoints: LinkedHashMap<String, List<String>>? by extra(null)
 val modMixinFiles: List<String>? by extra(null)
 val modDepends: LinkedHashMap<String, String>? by extra(null)
@@ -118,21 +118,18 @@ val customModIcon: String? by extra
 tasks {
     val creditsTask = register("iridiumCredits") {
         val credits = "$modName was built with the Iridium gradle plugin developed by TeamVoided over at https://teamvoided.org"
-
         val creditsFile = buildDir.resolve("resources/main/credits.iridium")
 
         inputs.property("credits", credits)
         outputs.file(creditsFile)
 
         doFirst {
-            val prettyJson = Json { prettyPrint = true }
-
             if (!creditsFile.exists()) {
                 creditsFile.parentFile.mkdirs()
                 creditsFile.createNewFile()
             }
 
-            creditsFile.writeText(prettyJson.encodeToString(credits))
+            creditsFile.writeText(credits)
         }
 
     }
