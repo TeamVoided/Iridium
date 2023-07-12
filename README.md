@@ -48,7 +48,7 @@ plugins {
 <summary>The JarInJar Script</summary>
 
 ## This is what you came here for right???
-#### The Jar In Jar script will automatically add all modules defined in the iridium config file to the fabric "include" gradle configuration which will automatically add them to ur jar
+#### The Jar In Jar script will automatically add all modules defined in the iridium config file to the fabric "include" gradle configuration which will automatically add them to your jar
 
 </details>
 
