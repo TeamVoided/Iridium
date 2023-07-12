@@ -56,7 +56,7 @@ plugins {
 <summary>Mod Build Script V1.2.0+</summary>
 
 # The Mod Build Script plugin will auto generate a mod json for you
-## As of iridium version 1.2.0 a clojure is used to define its properties
+## As of iridium version 1.2.0 a closure/configuration action is used to define its properties
 ###### To set the description/version you still use the default project.description/version properties
 
 ### Here's an example
