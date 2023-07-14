@@ -1,7 +1,6 @@
 package org.teamvoided.iridium.mod
 
 import org.teamvoided.iridium.config.Config.minecraftVersion
-import org.teamvoided.iridium.config.Config.modrinthDependencies
 import org.teamvoided.iridium.config.Config.projectState
 
 plugins {
@@ -15,10 +14,10 @@ val uploadScriptExtension = extensions.create("modrinthConfig", UploadScriptExte
 
 afterEvaluate {
     val modrinthId = uploadScriptExtension.modrinthId() ?: throw IllegalStateException("property \"modrinthId\" cannot be null")
-    val customSysProperty = uploadScriptExtension.customModrinthTokenProperty()
+    val modrinthDeps = uploadScriptExtension.modrinthDependencies()
 
     modrinth {
-        token.set(findProperty(if (customSysProperty != null) customSysProperty else "modrinth.token").toString())
+        token.set(findProperty(uploadScriptExtension.customModrinthTokenProperty() ?: "modrinth.token").toString())
 
         projectId.set(modrinthId)
         versionNumber.set(rootProject.version.toString())
@@ -28,8 +27,8 @@ afterEvaluate {
 
         uploadFile.set(tasks.remapJar.get())
 
-        if (modrinthDependencies.isNotEmpty()) {
-            dependencies.set(modrinthDependencies.map { it.toModrinthApiType() })
+        if (modrinthDeps.isNotEmpty()) {
+            dependencies.set(modrinthDeps)
         }
     }
 }

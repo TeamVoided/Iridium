@@ -44,7 +44,4 @@ object Config {
 
     val modules
         get() = IridiumLoader.config.modules
-
-    val modrinthDependencies
-        get() = IridiumLoader.config.modrinthDependencies
 }

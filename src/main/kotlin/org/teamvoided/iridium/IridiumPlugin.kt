@@ -6,7 +6,14 @@ import org.teamvoided.iridium.config.IridiumLoader
 
 class IridiumPlugin: Plugin<Project> {
     override fun apply(project: Project) {
-        println("This project is using Iridium a version independent minecraft kotlin build utility")
-        IridiumLoader.loadFrom(project.projectDir.resolve("gradle/iridium/iridium.json5").absoluteFile)
+        println("This project is using Iridium a Minecraft version-independent MC-Kotlin build utility!!!")
+
+        val iridiumExtension: IridiumExtension = project.extensions.create("iridium", IridiumExtension::class.java)
+
+        project.afterEvaluate {
+            if (!iridiumExtension.dirty) {
+                IridiumLoader.loadFrom(project.projectDir.resolve("gradle/iridium/iridium").absoluteFile)
+            }
+        }
     }
 }

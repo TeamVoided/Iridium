@@ -20,7 +20,7 @@ pluginManagement {
 ## root build.gradle.kts
 ```kotlin
 plugins {
-    id("org.teamvoided.iridium") version "1.2.0"
+    id("org.teamvoided.iridium") version "1.3.0"
     //maven publishing id("iridium.project.publish-script")
 }
 ```
@@ -42,6 +42,39 @@ plugins {
     //upload mod to modrinth id("iridium.mod.upload-script")
 }
 ```
+</details>
+
+<details>
+<summary>The Iridium Config Spec</summary>
+
+## Although you can configure Iridium in the gradle build script, Iridium can load config files in TOML, JSON5, YAML & JSON
+If Iridium detects that no changes were made to the config in the gradle build script it will attempt to load config files in this order (assume all files are in the gradle/iridium directory):
+- iridium.toml
+- iridium.json5
+- iridium.yml
+- iridium.json
+
+###### i didn't tell you this but if Iridium fails to find a config file it will autogenerate a toml one
+
+### The Actual Spec
+projectTitle: `String`<br>
+modId: `String`<br>
+githubRepo: `String`<br>
+discordServerInviteId: `String`<br>
+authors: `List<String>`<br>
+majorMinecraftVersion: `String`<br>
+minecraftVersion: `String`<br>
+mappings: `Mappings object (details below)`<br>
+fabricLoaderVersion: `String`<br>
+fabricApiVersion: `String`<br>
+fabricLangKotlinVersion: `String`<br>
+license: `String`<br>
+modules: `List<String>`
+
+#### The Mappings Object Spec
+type: `MappingsType (any of "MOJANG", "YARN", "PARCHMENT", "QUILT", "MOJPARCH", "MOJYARN"`
+version: `String?` (Irrelevant for `MappingsType.MOJANG`, leave either null or blank)
+
 </details>
 
 <details>

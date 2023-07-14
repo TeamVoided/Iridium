@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "org.teamvoided.iridium"
-version = "1.2.0"
+version = "1.3.0"
 
 repositories {
     mavenCentral()
@@ -28,6 +28,8 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
     implementation("io.github.xn32:json5k:0.3.0")
+    implementation("com.akuleshov7:ktoml-core:0.5.0")
+    implementation("com.charleskorn.kaml:kaml:0.54.0")
 }
 
 gradlePlugin {
