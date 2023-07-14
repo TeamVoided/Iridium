@@ -14,6 +14,8 @@ import org.teamvoided.iridium.config.Config.majorMinecraftVersion
 import org.teamvoided.iridium.config.Config.mappings
 import org.teamvoided.iridium.config.Config.minecraftVersion
 import org.teamvoided.iridium.config.IridiumLoader.MappingsType
+import java.io.FileReader
+import java.io.FileWriter
 
 plugins {
     kotlin("jvm")
@@ -119,6 +121,27 @@ afterEvaluate {
     val customModIcon: String? = buildScriptExtension.customIcon()
 
     tasks {
+        val copyLicenses = register("copyLicenses") {
+            val resourceDir = buildDir.resolve("resources/main")
+
+            val files = rootDir.listFiles()!!
+            val regex = Regex("(?i)LICENSE\\.?.*")
+
+            val licenseFiles = files.filter { regex.matches(it.name) }
+            val newFiles = licenseFiles.map { resourceDir.resolve(it.toString().removePrefix("$rootDir${File.separator}")).absoluteFile }
+
+            outputs.files(newFiles)
+
+            doFirst {
+                newFiles.forEachIndexed { index, file ->
+                    file.parentFile.mkdirs()
+                    file.createNewFile()
+                    val data = FileReader(licenseFiles[index]).use { it.readText() }
+                    FileWriter(file).use { it.write(data) }
+                }
+            }
+        }
+
         val creditsTask = register("iridiumCredits") {
             val credits = "$modName was built with the Iridium gradle plugin developed by TeamVoided over at https://teamvoided.org"
             val creditsFile = buildDir.resolve("resources/main/credits.iridium")
@@ -183,6 +206,7 @@ afterEvaluate {
         }
 
         processResources {
+            dependsOn(copyLicenses)
             dependsOn(creditsTask)
             dependsOn(modJsonTask)
         }
