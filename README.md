@@ -72,7 +72,7 @@ license: `String`<br>
 modules: `List<String>`
 
 #### The Mappings Object Spec
-type: `MappingsType (any of "MOJANG", "YARN", "PARCHMENT", "QUILT", "MOJPARCH", "MOJYARN"`
+type: `MappingsType (any of "MOJANG", "YARN", "PARCHMENT", "QUILT", "MOJPARCH", "MOJYARN"`<br>
 version: `String?` (Irrelevant for `MappingsType.MOJANG`, leave either null or blank)
 
 </details>
