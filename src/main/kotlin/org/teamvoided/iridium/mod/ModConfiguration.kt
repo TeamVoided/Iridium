@@ -4,21 +4,21 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ModConfiguration(
-    val schemaVersion: Int,
-    val id: String,
-    val version: String,
-    val name: String,
-    val description: String,
-    val authors: List<String>,
-    val entrypoints: LinkedHashMap<String, List<Entrypoint>> = linkedMapOf(),
-    val mixins: List<String> = emptyList(),
-    val depends: LinkedHashMap<String, String>,
-    val contact: Contact,
-    val license: String,
-    val icon: String? = null,
-    val custom: Custom? = null,
-    val jars: MutableList<JarFile> = mutableListOf(),
-    val languageAdapters: LinkedHashMap<String, String> = linkedMapOf()
+    var schemaVersion: Int,
+    var id: String,
+    var version: String,
+    var name: String,
+    var description: String,
+    var authors: List<String>,
+    var entrypoints: LinkedHashMap<String, List<Entrypoint>> = linkedMapOf(),
+    var mixins: List<String> = emptyList(),
+    var depends: LinkedHashMap<String, String>,
+    var contact: Contact,
+    var license: String,
+    var icon: String? = null,
+    var custom: Custom? = null,
+    var jars: MutableList<JarFile> = mutableListOf(),
+    var languageAdapters: LinkedHashMap<String, String> = linkedMapOf()
 ) {
     fun contact(homepage: String, issues: String, sources: String, discord: String) =
         Contact(homepage, issues, sources, discord)
