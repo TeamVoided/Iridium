@@ -2,6 +2,16 @@
 
 ## kotlin jar-in-jars made easy
 
+[![](https://teamvoided.org/iridium-sticker.png)](https://github.com/TeamVoided/iridium)
+<details>
+<summary>Iridium Sticker</summary>
+
+```markdown
+[![](https://teamvoided.org/iridium-sticker.png)](https://github.com/TeamVoided/iridium)
+```
+</details>
+<br>
+
 <details>
 <summary>Iridium Usage</summary>
 
