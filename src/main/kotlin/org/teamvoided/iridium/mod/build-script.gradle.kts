@@ -1,6 +1,5 @@
 package org.teamvoided.iridium.mod
 
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.teamvoided.iridium.config.Config.authors
@@ -67,48 +66,7 @@ dependencies {
 }
 
 val buildScriptExtension: BuildScriptExtension = extensions.create("modSettings", BuildScriptExtension::class.java)
-extensions.create("dependencyHelper", DependencyHelperExtension::class.java)
-
-@Serializable
-data class ModConfiguration(
-    val schemaVersion: Int,
-    val id: String,
-    val version: String,
-    val name: String,
-    val description: String,
-    val authors: List<String>,
-    val entrypoints: LinkedHashMap<String, List<Entrypoint>> = linkedMapOf(),
-    val mixins: List<String> = emptyList(),
-    val depends: LinkedHashMap<String, String>,
-    val contact: Contact,
-    val license: String,
-    val icon: String? = null,
-    val custom: Custom? = null,
-) {
-    @Serializable
-    data class Contact(
-        val homepage: String,
-        val issues: String,
-        val sources: String,
-        val discord: String,
-    )
-
-    @Serializable
-    data class Entrypoint(
-        val adapter: String,
-        val value: String,
-    )
-
-    @Serializable
-    data class Custom(
-        val modmenu: ModMenu? = null,
-    ) {
-        @Serializable
-        data class ModMenu(
-            val parent: String,
-        )
-    }
-}
+extensions.create("dependencyHelper", DependencyHelperExtension::class.java, project)
 
 afterEvaluate {
     val modId = buildScriptExtension.modId()
@@ -119,6 +77,8 @@ afterEvaluate {
     val isModParent = buildScriptExtension.isModParent()
     val modParent = buildScriptExtension.modParent()
     val customModIcon: String? = buildScriptExtension.customIcon()
+
+    base.archivesName.set(modId)
 
     tasks {
         val copyLicenses = register("copyLicenses") {
@@ -194,6 +154,8 @@ afterEvaluate {
             outputs.file(modDotJson)
 
             doFirst {
+                ModConfigurationMutations.applyMutations(project.name, modConfig)
+
                 val prettyJson = Json { prettyPrint = true }
 
                 if (!modDotJson.exists()) {

@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "org.teamvoided.iridium"
-version = "1.3.1"
+version = "2.0.0"
 
 repositories {
     mavenCentral()

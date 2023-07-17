@@ -1,8 +1,9 @@
 package org.teamvoided.iridium.mod
 
+import org.gradle.api.Project
 import org.teamvoided.iridium.config.Config
 
-open class BuildScriptExtension {
+open class BuildScriptExtension(val project: Project) {
     private var modId = Config.modId
     private var modName = Config.projectTitle
     private var modEntrypoints = linkedMapOf<String, List<String>>()
@@ -48,4 +49,7 @@ open class BuildScriptExtension {
 
     fun customIcon() = customModIcon
     fun customIcon(iconPath: String) { customModIcon = iconPath }
+
+    fun mutation(mutation: ModConfiguration.() -> Unit) =
+        ModConfigurationMutations.addMutation(project.name) { mutation(it) }
 }

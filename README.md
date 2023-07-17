@@ -20,7 +20,7 @@ pluginManagement {
 ## root build.gradle.kts
 ```kotlin
 plugins {
-    id("org.teamvoided.iridium") version "1.3.1"
+    id("org.teamvoided.iridium") version "2.0.0"
     //maven publishing id("iridium.project.publish-script")
 }
 ```
@@ -81,7 +81,7 @@ version: `String?` (Irrelevant for `MappingsType.MOJANG`, leave either null or b
 <summary>The JarInJar Script</summary>
 
 ## This is what you came here for right???
-#### The Jar In Jar script will automatically add all modules defined in the iridium config file to the fabric "include" gradle configuration which will automatically add them to your jar
+#### The Jar In Jar script will automatically add all modules defined in the iridium config file to your mod jar
 
 </details>
 
@@ -106,11 +106,27 @@ modSettings {
     // other properties
 }
 
-base.archivesName.set("example-mod")
+/*irrelevant as of v2.0.0+*/ base.archivesName.set("example-mod")
 version = project.properties["mod_version"] as String
 description = "Example Mod Description"
 group = project.properties["maven_group"] as String
 ```
+
+<details>
+<summary>Advanced stuff v2.0.0+</summary>
+
+## Iridium will generate a default mod json, however if you want to edit the data itself you can use mutations
+### Here's in example
+
+```kotlin
+modSettings {
+    mutation {
+        this.languageAdapters["customAdapter"] = "adapter.example.Adapter"
+    }
+}
+```
+</details>
+
 </details>
 
 <details>
