@@ -20,7 +20,6 @@ bse.isModParent(true)
 tasks {
     val copyJars = create("copyJars") {
         val modJars = mutableListOf<File>()
-        val resourceJarDir = buildDir.resolve("resources/main/META-INF/jars")
 
         val resourceDir = buildDir.resolve("resources/main")
         Config.modules.forEach {
