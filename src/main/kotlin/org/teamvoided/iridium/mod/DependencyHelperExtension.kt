@@ -16,7 +16,9 @@ open class DependencyHelperExtension(val project: Project, val buildScriptExtens
 
 
     fun jarInclude(path: String, dependencyType: DependencyType = DependencyType.EMBEDDED): ProjectDependency {
-       addModrinthDependency(path, dependencyType)
+        project.evaluationDependsOn(":$path")
+
+        addModrinthDependency(path, dependencyType)
 
         val destJarPath = JarHelper.computeDestJarPath(project.project(":$path"), project)
         val copyTask = project.tasks.create("copyJarFrom${path.replace(":", ".")}") {
