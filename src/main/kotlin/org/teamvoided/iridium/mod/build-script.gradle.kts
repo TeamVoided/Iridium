@@ -66,7 +66,7 @@ dependencies {
 }
 
 val buildScriptExtension: BuildScriptExtension = extensions.create("modSettings", BuildScriptExtension::class.java)
-extensions.create("dependencyHelper", DependencyHelperExtension::class.java, project)
+extensions.create("dependencyHelper", DependencyHelperExtension::class.java, project, buildScriptExtension)
 
 afterEvaluate {
     val modId = buildScriptExtension.modId()
@@ -144,7 +144,7 @@ afterEvaluate {
                     "https://discord.gg/$discordServerInviteId"
                 ),
                 license,
-                if (modId.endsWith("-all")) "assets/$modId/icon.png" else customModIcon,
+                if (isModParent) "assets/$modId/icon.png" else customModIcon,
                 if (isModParent) null else ModConfiguration.Custom(ModConfiguration.Custom.ModMenu(modParent!!)),
             )
 

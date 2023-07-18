@@ -1,8 +1,7 @@
 package org.teamvoided.iridium.mod
 
 import org.teamvoided.iridium.config.Config
-import java.io.FileInputStream
-import java.io.FileOutputStream
+import org.teamvoided.iridium.helper.JarHelper
 
 plugins {
     kotlin("jvm")
@@ -15,6 +14,9 @@ dependencies {
     }
 }
 
+val bse = project.extensions["modSettings"] as BuildScriptExtension
+bse.isModParent(true)
+
 tasks {
     val copyJars = create("copyJars") {
         val modJars = mutableListOf<File>()
@@ -24,34 +26,20 @@ tasks {
         Config.modules.forEach {
             val task = getByPath(":$it:remapJar")
             dependsOn(task)
-            modJars += task.outputs.files.singleFile
+            modJars += JarHelper.computeDestJarPath(project(":$it"), project)
         }
 
-        val newFiles = modJars.map {
-            resourceJarDir.resolve(
-                it.toString().removePrefix("$rootDir${File.separator}")
-                    .replace(File.separator, "/")
-                    .replace(Regex(".*?/build/libs/"), "")
-            ).absoluteFile
-        }
         ModConfigurationMutations.addMutation(project.name) { it ->
-            it.jars += newFiles.map {
-                ModConfiguration.JarFile(it.toRelativeString(resourceDir).replace(File.separator, "/"))
+            it.jars += modJars.map {
+                ModConfiguration.JarFile(JarHelper.toMetaInfJarString(it, resourceDir))
             }
         }
 
-        outputs.files(newFiles)
+        outputs.files(modJars)
 
         doFirst {
-            resourceJarDir.listFiles()?.forEach {
-                it.deleteRecursively()
-            }
-
-            newFiles.forEachIndexed { index, file ->
-                file.parentFile.mkdirs()
-                file.createNewFile()
-                val data = FileInputStream(modJars[index]).use { it.readBytes() }
-                FileOutputStream(file).use { it.write(data) }
+            Config.modules.forEach {
+                JarHelper.copyJar(project(":$it"), project)
             }
         }
     }

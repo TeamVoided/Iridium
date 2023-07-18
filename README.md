@@ -30,7 +30,7 @@ pluginManagement {
 ## root build.gradle.kts
 ```kotlin
 plugins {
-    id("org.teamvoided.iridium") version "2.0.2"
+    id("org.teamvoided.iridium") version "2.1.0"
     //maven publishing id("iridium.project.publish-script")
 }
 ```
