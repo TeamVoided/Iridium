@@ -21,17 +21,17 @@ open class DependencyHelperExtension(val project: Project, val buildScriptExtens
         addModrinthDependency(path, dependencyType)
 
         val destJarPath = JarHelper.computeDestJarPath(project.project(":$path"), project)
-        val copyTask = project.tasks.create("copyJarFrom${path.replace(":", ".")}") {
+        project.tasks.create("copyJarFrom${path.replace(":", ".")}") {
             outputs.file(destJarPath)
+
+            project.tasks.getByName("remapJar") {
+                dependsOn(this@create)
+            }
 
             doFirst {
                 JarHelper.deleteJarIncludes(project)
                 JarHelper.copyJar(project.project(":$path"), project)
             }
-        }
-
-        project.tasks.getByName("remapJar") {
-            dependsOn(copyTask)
         }
 
         buildScriptExtension.mutation {
