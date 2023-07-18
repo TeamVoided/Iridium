@@ -10,7 +10,7 @@ plugins {
     signing
 }
 
-val publishScriptExtension = extensions.create("repositories", PublishScriptExtension::class.java)
+val publishScriptExtension = extensions.create("publishScript", PublishScriptExtension::class.java)
 
 afterEvaluate {
     publishing {
