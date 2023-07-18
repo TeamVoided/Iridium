@@ -27,6 +27,12 @@ object JarHelper {
         ).absoluteFile
     }
 
+    fun deleteJarIncludes(from: Project) {
+        from.buildDir.resolve("resources/main/META-INF/jars").listFiles()?.forEach {
+            it.deleteRecursively()
+        }
+    }
+
     fun copyJar(from: Project, to: Project): File {
         val fromJar = from.tasks.getByName("remapJar").outputs.files.singleFile
         val destJar = computeDestJarPath(fromJar, to)

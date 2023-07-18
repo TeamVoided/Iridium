@@ -23,6 +23,7 @@ open class DependencyHelperExtension(val project: Project, val buildScriptExtens
             outputs.file(destJarPath)
 
             doFirst {
+                JarHelper.deleteJarIncludes(project)
                 JarHelper.copyJar(project.project(":$path"), project)
             }
         }

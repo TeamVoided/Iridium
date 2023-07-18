@@ -38,6 +38,7 @@ tasks {
 
         doFirst {
             Config.modules.forEach {
+                JarHelper.deleteJarIncludes(project)
                 JarHelper.copyJar(project(":$it"), project)
             }
         }
