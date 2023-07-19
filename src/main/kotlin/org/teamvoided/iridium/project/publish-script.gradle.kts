@@ -10,7 +10,7 @@ plugins {
     signing
 }
 
-val publishScriptExtension = extensions.create("publishScript", PublishScriptExtension::class.java)
+val publishScriptExtension = extensions.create("publishScript", PublishScriptExtension::class.java, project)
 
 afterEvaluate {
     publishing {
@@ -25,11 +25,11 @@ afterEvaluate {
         }
 
         publications {
-            register<MavenPublication>(project.name) {
+            register<MavenPublication>(publishScriptExtension.publicationName()) {
                 from(components["java"])
 
                 this.groupId = project.group.toString()
-                this.artifactId = project.name
+                this.artifactId = publishScriptExtension.publicationName()
                 this.version = rootProject.version.toString()
 
                 pom {
