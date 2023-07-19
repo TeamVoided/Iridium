@@ -23,8 +23,6 @@ tasks {
 
         val resourceDir = buildDir.resolve("resources/main")
         Config.modules.forEach {
-            val task = getByPath(":$it:remapJar")
-            dependsOn(task)
             modJars += JarHelper.computeDestJarPath(project(":$it"), project)
         }
 
@@ -49,12 +47,15 @@ tasks {
         }
     }
 
-    remapJar {
+    jar {
         Config.modules.forEach {
             dependsOn(":$it:remapJar")
         }
 
         dependsOn(copyJars)
+    }
+
+    remapJar {
         finalizedBy(cleanupIncludes)
     }
 }
