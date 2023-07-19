@@ -38,9 +38,14 @@ tasks {
 
         doFirst {
             Config.modules.forEach {
-                JarHelper.deleteJarIncludes(project)
                 JarHelper.copyJar(project(":$it"), project)
             }
+        }
+    }
+
+    val cleanupIncludes = create("cleanupJarIncludes") {
+        doFirst {
+            JarHelper.deleteJarIncludes(project)
         }
     }
 
@@ -50,6 +55,7 @@ tasks {
         }
 
         dependsOn(copyJars)
+        finalizedBy(cleanupIncludes)
     }
 }
 
