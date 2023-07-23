@@ -14,6 +14,10 @@ dependencies {
     }
 }
 
+Config.modules.forEach {
+    evaluationDependsOn(":$it")
+}
+
 val bse = project.extensions["modSettings"] as BuildScriptExtension
 bse.isModParent(true)
 
@@ -48,14 +52,14 @@ tasks {
     }
 
     jar {
-        Config.modules.forEach {
-            dependsOn(":$it:remapJar")
-        }
-
         dependsOn(copyJars)
     }
 
     remapJar {
+        Config.modules.forEach {
+            dependsOn(":$it:remapJar")
+        }
+
         finalizedBy(cleanupIncludes)
     }
 }
