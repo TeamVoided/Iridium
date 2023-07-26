@@ -32,12 +32,17 @@ object IridiumLoader {
     var config: Config = defaultConfig
 
     @OptIn(ExperimentalSerializationApi::class)
-    fun loadFrom(file: File) {
-        if (attemptLoad(Toml, File("${file}.toml"))) return
-        if (attemptLoad(Json5 { prettyPrint = true; indentationWidth = 2 }, File("${file}.json5"))) return
-        if (attemptLoad(Yaml.default, File("${file}.yml"))) return
-        if (attemptLoad(Json { prettyPrint = true; prettyPrintIndent = "\t" }, File("${file}.json"))) return
-        forceLoad(Toml, File("${file}.toml"))
+    fun loadFrom(file: File, forceLoad: Boolean): Boolean {
+        if (attemptLoad(Toml, File("${file}.toml"))) return true
+        if (attemptLoad(Json5 { prettyPrint = true; indentationWidth = 2 }, File("${file}.json5"))) return true
+        if (attemptLoad(Yaml.default, File("${file}.yml"))) return true
+        if (attemptLoad(Json { prettyPrint = true; prettyPrintIndent = "\t" }, File("${file}.json"))) return true
+        if (forceLoad) {
+            forceLoad(Toml, File("${file}.toml"))
+            return true
+        }
+
+        return false
     }
 
     private fun attemptLoad(format: StringFormat, file: File): Boolean {
@@ -63,19 +68,19 @@ object IridiumLoader {
 
     @Serializable
     data class Config(
-        val projectTitle: String,
-        val modId: String,
-        val githubRepo: String,
-        val discordServerInviteId: String,
-        val authors: List<String>,
-        val majorMinecraftVersion: String,
-        val minecraftVersion: String,
-        val mappings: Mappings,
-        val fabricLoaderVersion: String,
-        val fabricApiVersion: String,
-        val fabricLangKotlinVersion: String,
-        val license: String,
-        val modules: List<String>
+        var projectTitle: String,
+        var modId: String,
+        var githubRepo: String,
+        var discordServerInviteId: String,
+        var authors: List<String>,
+        var majorMinecraftVersion: String,
+        var minecraftVersion: String,
+        var mappings: Mappings,
+        var fabricLoaderVersion: String,
+        var fabricApiVersion: String,
+        var fabricLangKotlinVersion: String,
+        var license: String,
+        var modules: List<String>
     )
 
     @Serializable

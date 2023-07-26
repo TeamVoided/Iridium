@@ -66,7 +66,7 @@ dependencies {
 }
 
 val buildScriptExtension: BuildScriptExtension = extensions.create("modSettings", BuildScriptExtension::class.java)
-extensions.create("dependencyHelper", DependencyHelperExtension::class.java, project, buildScriptExtension)
+extensions.create("dependencyHelper", DependencyHelperExtension::class.java, project)
 
 afterEvaluate {
     val modId = buildScriptExtension.modId()
