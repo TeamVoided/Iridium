@@ -6,14 +6,16 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 
 object JarHelper {
-    fun computeDestJarPath(from: Project, to: Project): File {
-        val fromJar = from.tasks.getByName("remapJar").outputs.files.singleFile
+    fun computeDestJarPath(from: Project, to: Project, release: Boolean = false): File {
+        val fromJar =
+            if (release) from.tasks.getByName("remapJar").outputs.files.singleFile
+            else from.tasks.getByName("jar").outputs.files.singleFile
         val resourceJarDir = to.buildDir.resolve("resources/main/META-INF/jars")
 
         return resourceJarDir.resolve(
             fromJar.toString()
                 .replace(File.separator, "/")
-                .replace(Regex(".*?/build/libs/"), "")
+                .replace(Regex(".*?/build/.*?/"), "")
         ).absoluteFile
     }
 
@@ -33,8 +35,10 @@ object JarHelper {
         }
     }
 
-    fun copyJar(from: Project, to: Project): File {
-        val fromJar = from.tasks.getByName("remapJar").outputs.files.singleFile
+    fun copyJar(from: Project, to: Project, release: Boolean = false): File {
+        val fromJar =
+            if (release) from.tasks.getByName("remapJar").outputs.files.singleFile
+            else from.tasks.getByName("jar").outputs.files.singleFile
         val destJar = computeDestJarPath(fromJar, to)
 
         val data = FileInputStream(fromJar).use { it.readBytes() }

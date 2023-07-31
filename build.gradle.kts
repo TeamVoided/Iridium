@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "org.teamvoided.iridium"
-version = "2.3.0"
+version = "2.4.0"
 
 repositories {
     mavenCentral()
@@ -72,10 +72,7 @@ publishing {
         maven {
             name = "BrokenFuse"
             url = uri("https://maven.brokenfuse.me/releases")
-            credentials {
-                username = System.getenv("BFUSE_USER")
-                password = System.getenv("BFUSE_KEY")
-            }
+            credentials(PasswordCredentials::class)
         }
     }
 }
