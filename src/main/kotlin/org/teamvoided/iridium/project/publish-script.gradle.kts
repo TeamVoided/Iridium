@@ -24,38 +24,40 @@ afterEvaluate {
             }
         }
 
-        publications {
-            register<MavenPublication>(publishScriptExtension.publicationName()) {
-                from(components["java"])
+        afterEvaluate {
+            publications {
+                register<MavenPublication>(publishScriptExtension.publicationName()) {
+                    from(components["java"])
 
-                this.groupId = project.group.toString()
-                this.artifactId = publishScriptExtension.publicationName()
-                this.version = rootProject.version.toString()
+                    this.groupId = project.group.toString()
+                    this.artifactId = publishScriptExtension.publicationName()
+                    this.version = project.version.toString()
 
-                pom {
-                    name.set(project.name)
-                    description.set(project.description)
+                    pom {
+                        name.set(project.name)
+                        description.set(project.description)
 
-                    developers {
-                        authors.forEach {
-                            developer {
-                                name.set(it)
+                        developers {
+                            authors.forEach {
+                                developer {
+                                    name.set(it)
+                                }
                             }
                         }
-                    }
 
-                    licenses {
                         licenses {
-                            name.set(license)
-                            url.set("https://github.com/$githubRepo/blob/master/LICENSE")
+                            licenses {
+                                name.set(license)
+                                url.set("https://github.com/$githubRepo/blob/master/LICENSE")
+                            }
                         }
-                    }
 
-                    url.set("https://github.com/$githubRepo")
+                        url.set("https://github.com/$githubRepo")
 
-                    scm {
-                        connection.set("scm:git:git://github.com/${githubRepo}.git")
-                        url.set("https://github.com/${githubRepo}/tree/main")
+                        scm {
+                            connection.set("scm:git:git://github.com/${githubRepo}.git")
+                            url.set("https://github.com/${githubRepo}/tree/main")
+                        }
                     }
                 }
             }
