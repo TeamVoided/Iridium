@@ -1,6 +1,6 @@
 # Iridium
 # ANY VERSION UNDER 3.0.0 SHOULD BE CONSIDERED HIGHLY UNSTABLE AND SHOULD NOT BE USED
-## Major JarInJar system changed since v3.0.0 please refer to [V3 Doc](/TeamVoided/iridium/blob/master/V3.md)
+## Major JarInJar system changes since v3.0.0 please refer to [V3 Doc](/V3.md)
 
 ## kotlin jar-in-jars made easy
 
