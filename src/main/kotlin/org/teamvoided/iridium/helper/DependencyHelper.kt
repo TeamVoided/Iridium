@@ -1,16 +1,14 @@
 package org.teamvoided.iridium.helper
 
 import com.modrinth.minotaur.dependencies.DependencyType
-import net.fabricmc.loom.util.Pair
-import net.fabricmc.loom.util.ZipUtils
+import net.fabricmc.loom.task.RemapJarTask
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.tasks.TaskInputs
 import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.project
-import org.teamvoided.iridium.mod.BuildScriptExtension
-import org.teamvoided.iridium.mod.ModConfiguration
 import org.teamvoided.iridium.mod.UploadScriptExtension
 
 object DependencyHelper {
@@ -28,54 +26,16 @@ object DependencyHelper {
         }
     }
 
-    fun jarInclude(project: Project, path: String, dependencyType: DependencyType = DependencyType.EMBEDDED): ProjectDependency {
-        project.evaluationDependsOn(":$path")
-
+    fun jarInclude(project: Project, path: String, dependencyType: DependencyType = DependencyType.EMBEDDED): Dependency {
         addModrinthDependency(project, path, dependencyType)
+        val projectJar = project.project(":$path").tasks.getByName("remapJar").outputs.files.singleFile
 
-        val destJarPath = JarHelper.computeDestJarPath(project.project(":$path"), project, project.gradle.startParameter.taskNames.contains("remapJar"))
-
-
-        project.tasks.create("copyJarFrom${path.replace(":", ".")}") {
-            if (project.gradle.startParameter.taskNames.contains("remapJar")) {
-                val oRJT = project.project(path).tasks.getByPath("remapJar")
-                dependsOn(oRJT)
-                project.project(path).tasks.filter { Regex("copyJarFrom.*").matches(it.name) }.forEach { dependsOn(it) }
-
-                val remapJarTask = project.tasks.getByName("remapJar")
-                remapJarTask.finalizedBy(this)
-
-                doFirst {
-                    val oJar = oRJT.outputs.files.singleFile
-                    ZipUtils.add(remapJarTask.outputs.files.singleFile.toPath(), listOf(Pair("META-INF/jars/${oJar.name}", oJar.readBytes())))
-                }
-            } else {
-                val otherJarTask = project.project(path).tasks.getByPath("jar")
-                dependsOn(otherJarTask)
-                project.project(path).tasks.filter { Regex("copyJarFrom.*").matches(it.name) }.forEach { dependsOn(it) }
-
-                val jarTask = project.tasks.getByName("jar")
-                jarTask.finalizedBy(this)
-
-                doFirst {
-                    val oJar = otherJarTask.outputs.files.singleFile
-                    ZipUtils.add(jarTask.outputs.files.singleFile.toPath(), listOf(Pair("META-INF/jars/${oJar.name}", oJar.readBytes())))
-                }
-            }
+        project.tasks.getByName("remapJar") {
+            this as RemapJarTask
+            nestedJars.from(projectJar)
         }
 
-        val buildScriptExtension = project.extensions["modSettings"] as BuildScriptExtension
-
-        buildScriptExtension.mutation {
-            this.jars += ModConfiguration.JarFile(
-                JarHelper.toMetaInfJarString(
-                    destJarPath,
-                    JarHelper.getResourceDir(project)
-                )
-            )
-        }
-
-        return project.dependencies.project(path, configuration = "namedElements")
+        return project.dependencies.add("implementation", project.dependencies.project("$path:", "namedElements"))!!
     }
 
     private fun <T> extracted(collection: Iterable<T>, str2: StringBuilder) {

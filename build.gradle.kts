@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "org.teamvoided.iridium"
-version = "2.4.0"
+version = "3.0.0"
 
 repositories {
     mavenCentral()
@@ -47,11 +47,6 @@ gradlePlugin {
         create("iridium-mod-upload-script") {
             id = "iridium.mod.upload-script"
             implementationClass = "org.teamvoided.iridium.mod.UploadScriptPlugin"
-        }
-
-        create("iridium-mod-jar-in-jar") {
-            id = "iridium.mod.jar-in-jar"
-            implementationClass = "org.teamvoided.iridium.mod.JarInJarPlugin"
         }
 
         create("iridium-project-publish-script") {

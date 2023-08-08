@@ -1,4 +1,6 @@
 # Iridium
+# ANY VERSION UNDER 3.0.0 SHOULD BE CONSIDERED HIGHLY UNSTABLE AND SHOULD NOT BE USED
+## Major JarInJar system changed since v3.0.0 please refer to [V3 Doc](/TeamVoided/iridium/blob/master/V3.md)
 
 ## kotlin jar-in-jars made easy
 
@@ -20,9 +22,7 @@
 pluginManagement {
     repositories {
         //other repos
-        maven("https://maven.brokenfuse.me/releases")
-        //projects will eventually be migrated to https://maven.teamvoided.org
-        //as of right now https://maven.teamvoided.org just points to https://maven.brokenfuse.me
+        maven("https://maven.teamvoided.org/releases")
     }
 }
 ```
@@ -30,7 +30,7 @@ pluginManagement {
 ## root build.gradle.kts
 ```kotlin
 plugins {
-    id("org.teamvoided.iridium") version "2.4.0"
+    id("org.teamvoided.iridium") version "3.0.0" //will automatically use root project for jarInJar
     //maven publishing id("iridium.project.publish-script")
 }
 ```
