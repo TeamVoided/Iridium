@@ -23,7 +23,7 @@ dependencies {
     compileOnly(pluginDep("org.jetbrains.kotlin.plugin.serialization", embeddedKotlinVersion))
     runtimeOnly(pluginDep("org.jetbrains.kotlin.plugin.serialization", kotlinVersion))
 
-    implementation(pluginDep("fabric-loom", "1.3.8"))
+    implementation(pluginDep("fabric-loom", "1.3-SNAPSHOT"))
     implementation(pluginDep("com.modrinth.minotaur", "2.7.5"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
