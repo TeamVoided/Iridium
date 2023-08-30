@@ -16,12 +16,13 @@ import org.teamvoided.iridium.mod.BuildScriptPlugin
 class IridiumPlugin: Plugin<Project> {
     override fun apply(project: Project) {
         println("This project is using Iridium a Minecraft version-independent MC-Kotlin build utility!!!")
+        
+        IridiumLoader.loadFrom(project.projectDir.resolve("gradle/iridium/iridium").absoluteFile, true)
+
         project.evaluationDependsOnChildren()
 
         project.plugins.apply(LoomGradlePluginBootstrap::class)
         project.plugins.apply(BuildScriptPlugin::class)
-
-        IridiumLoader.loadFrom(project.projectDir.resolve("gradle/iridium/iridium").absoluteFile, true)
 
         project.extensions.getByType(LoomGradleExtensionAPI::class).run {
             runs {

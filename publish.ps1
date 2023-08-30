@@ -1,0 +1,1 @@
+./gradlew publishAllPublicationsToTeamVoidedRepository -PTeamVoidedUsername="$env:TeamVoidedUsername" -PTeamVoidedPassword="$env:TeamVoidedPassword"

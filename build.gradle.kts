@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "org.teamvoided.iridium"
-version = "3.0.1"
+version = "3.0.2"
 
 repositories {
     mavenCentral()
@@ -65,8 +65,8 @@ gradlePlugin {
 publishing {
     repositories {
         maven {
-            name = "BrokenFuse"
-            url = uri("https://maven.brokenfuse.me/releases")
+            name = "TeamVoided"
+            url = uri("https://maven.teamvoided.org/releases")
             credentials(PasswordCredentials::class)
         }
     }
