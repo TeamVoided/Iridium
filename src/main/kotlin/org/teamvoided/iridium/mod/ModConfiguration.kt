@@ -12,6 +12,7 @@ data class ModConfiguration(
     var authors: List<String>,
     var entrypoints: LinkedHashMap<String, List<Entrypoint>> = linkedMapOf(),
     var mixins: List<String> = emptyList(),
+    var accessWidener: String? = null,
     var depends: LinkedHashMap<String, String>,
     var contact: Contact,
     var license: String,

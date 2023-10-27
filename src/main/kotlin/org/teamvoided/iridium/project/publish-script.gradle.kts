@@ -13,6 +13,13 @@ plugins {
 val publishScriptExtension = extensions.create("publishScript", PublishScriptExtension::class.java, project)
 
 afterEvaluate {
+    java {
+        if (publishScriptExtension.publishSources())
+            withSourcesJar()
+        if (publishScriptExtension.publishJavadoc())
+            withJavadocJar()
+    }
+
     publishing {
         repositories {
             publishScriptExtension.repositories().forEach {

@@ -1,13 +1,17 @@
 package org.teamvoided.iridium.mod
 
+import net.fabricmc.loom.api.LoomGradleExtensionAPI
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.get
 import org.teamvoided.iridium.config.Config
+import java.io.File
 
 open class BuildScriptExtension(val project: Project) {
     private var modId = Config.modId
     private var modName = Config.projectTitle
     private var modEntrypoints = linkedMapOf<String, List<String>>()
     private var modMixinFiles = mutableListOf<String>()
+    private var accessWidener: String? = null
     private var modDepends = linkedMapOf(
         Pair("fabricloader", ">=${Config.fabricLoaderVersion}"),
         Pair("fabric-api", ">=${Config.fabricApiVersion}"),
@@ -38,6 +42,12 @@ open class BuildScriptExtension(val project: Project) {
 
     fun mixinFiles() = modMixinFiles
     fun mixinFile(mixinFile: String) { modMixinFiles += mixinFile }
+
+    fun accessWidener() = accessWidener
+    fun accessWidener(accessWidener: String) {
+        this.accessWidener = accessWidener
+        (project.extensions["loom"] as LoomGradleExtensionAPI).accessWidenerPath.set(File("src/main/resources/$accessWidener"))
+    }
 
     fun dependencies() = modDepends
     fun dependency(id: String, versionDeclaration: String) { modDepends[id] = versionDeclaration }
