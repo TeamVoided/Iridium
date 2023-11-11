@@ -1,7 +1,9 @@
 package org.teamvoided.iridium.project
 
+import org.gradle.configurationcache.extensions.capitalized
 import org.teamvoided.iridium.config.Config.authors
 import org.teamvoided.iridium.config.Config.githubRepo
+import org.teamvoided.iridium.config.Config.isSnapshot
 import org.teamvoided.iridium.config.Config.license
 
 plugins {
@@ -13,6 +15,19 @@ plugins {
 val publishScriptExtension = extensions.create("publishScript", PublishScriptExtension::class.java, project)
 
 afterEvaluate {
+    tasks {
+        create("publishSnapshots") {
+            group = "publishing"
+
+            publishScriptExtension.publications().forEach {
+                if (!it.isSnapshot) return@forEach
+
+                dependsOn("publish${it.name.capitalized()}PublicationTo${publishScriptExtension.releaseRepository()!!.first}Repository")
+                dependsOn("publish${it.name.capitalized()}PublicationToMavenLocal")
+            }
+        }
+    }
+
     java {
         if (publishScriptExtension.publishSources())
             withSourcesJar()
@@ -22,48 +37,58 @@ afterEvaluate {
 
     publishing {
         repositories {
-            publishScriptExtension.repositories().forEach {
-                maven {
-                    name = it.key
-                    credentials(PasswordCredentials::class)
-                    setUrl(it.value)
-                }
+            maven {
+                name = publishScriptExtension.releaseRepository()!!.first
+                url = uri(publishScriptExtension.releaseRepository()!!.second)
+                credentials(PasswordCredentials::class)
             }
         }
 
         afterEvaluate {
             publications {
-                register<MavenPublication>(publishScriptExtension.publicationName()) {
-                    from(components["java"])
+                publishScriptExtension.publications().forEach {
+                    if (!it.isSnapshot && project.gradle.startParameter.taskNames.contains("publishSnapshots"))
+                        return@forEach
 
-                    this.groupId = project.group.toString()
-                    this.artifactId = publishScriptExtension.publicationName()
-                    this.version = project.version.toString()
+                    if (it.isSnapshot && !project.gradle.startParameter.taskNames.contains("publishSnapshots"))
+                        return@forEach
 
-                    pom {
-                        name.set(project.name)
-                        description.set(project.description)
+                    register<MavenPublication>(it.name) {
+                        from(components["java"])
 
-                        developers {
-                            authors.forEach {
-                                developer {
-                                    name.set(it)
+                        this.groupId = project.group.toString()
+                        this.artifactId = base.archivesName.get()
+                        val versionStr = project.version.toString()
+                        this.version =
+                            if (it.isSnapshot)
+                                "$versionStr-SNAPSHOT"
+                            else versionStr
+
+                        pom {
+                            name.set(project.name)
+                            description.set(project.description)
+
+                            developers {
+                                authors.forEach {
+                                    developer {
+                                        name.set(it)
+                                    }
                                 }
                             }
-                        }
 
-                        licenses {
                             licenses {
-                                name.set(license)
-                                url.set("https://github.com/$githubRepo/blob/master/LICENSE")
+                                license {
+                                    name.set(license)
+                                    url.set("https://github.com/$githubRepo/blob/master/LICENSE")
+                                }
                             }
-                        }
 
-                        url.set("https://github.com/$githubRepo")
+                            url.set("https://github.com/$githubRepo")
 
-                        scm {
-                            connection.set("scm:git:git://github.com/${githubRepo}.git")
-                            url.set("https://github.com/${githubRepo}/tree/main")
+                            scm {
+                                connection.set("scm:git:git://github.com/${githubRepo}.git")
+                                url.set("https://github.com/${githubRepo}/tree/main")
+                            }
                         }
                     }
                 }
