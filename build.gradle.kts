@@ -69,5 +69,14 @@ publishing {
             url = uri("https://maven.teamvoided.org/releases")
             credentials(PasswordCredentials::class)
         }
+
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/TeamVoided/Iridium")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
     }
 }
