@@ -3,7 +3,6 @@ package org.teamvoided.iridium.project
 import org.gradle.configurationcache.extensions.capitalized
 import org.teamvoided.iridium.config.Config.authors
 import org.teamvoided.iridium.config.Config.githubRepo
-import org.teamvoided.iridium.config.Config.isSnapshot
 import org.teamvoided.iridium.config.Config.license
 
 plugins {
@@ -38,9 +37,24 @@ afterEvaluate {
     publishing {
         repositories {
             maven {
-                name = publishScriptExtension.releaseRepository()!!.first
-                url = uri(publishScriptExtension.releaseRepository()!!.second)
-                credentials(PasswordCredentials::class)
+                val nameNullable = publishScriptExtension.releaseRepository()?.first
+                val urlNullable = publishScriptExtension.releaseRepository()?.second
+                if (nameNullable == null) println("[WARNING] Repository name is null!")
+                if (urlNullable == null) println("[WARNING] Repository url is null!")
+
+                name = nameNullable ?: ""
+                url = uri(urlNullable ?: "")
+
+                if (nameNullable != null) {
+                    val usernameEnv = System.getProperty("${nameNullable}Username") ?: throw NullPointerException("Variable ${nameNullable}Username not found!")
+                    val passwordEnv = System.getProperty("${nameNullable}Password") ?: throw NullPointerException("Variable ${nameNullable}Password not found!")
+
+//                    (PasswordCredentials::class)
+                    credentials {
+                        username = usernameEnv
+                        password = passwordEnv
+                    }
+                }
             }
         }
 

@@ -22,7 +22,7 @@ object DependencyHelper {
         if (project.plugins.hasPlugin("iridium.mod.upload-script") && project.project(path).plugins.hasPlugin("iridium.mod.upload-script")) {
             val otherExtension = project.project(path).extensions["modrinthConfig"] as UploadScriptExtension
 
-            (project.extensions["modrinthConfig"] as UploadScriptExtension).modrinthDependency(otherExtension.modrinthId()!!, dependencyType)
+            (project.extensions["modrinthConfig"] as UploadScriptExtension).modrinthDependency(otherExtension.modrinthId!!, dependencyType)
         }
     }
 

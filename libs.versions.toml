@@ -1,0 +1,25 @@
+[versions]
+kotlin = "1.9.0" # "1.9.23"
+
+kotlinx-serialization = "1.6.3"
+
+fabric-loom = "1.6-SNAPSHOT"
+modrinth-minotaur = "2.8.7"
+curseforgegradle = "1.1.15"
+
+json5k = "0.3.0"
+ktoml = "0.5.0"
+kaml = "0.54.0"
+
+[libraries]
+fabric-loom = { module = "fabric-loom:fabric-loom.gradle.plugin", version.ref = "fabric-loom" }
+modrinth-minotaur = { module = "com.modrinth.minotaur:com.modrinth.minotaur.gradle.plugin", version.ref = "modrinth-minotaur" }
+curseforgegradle = { module = "net.darkhax.curseforgegradle:net.darkhax.curseforgegradle.gradle.plugin", version.ref = "curseforgegradle" }
+
+kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+json5k = { module = "io.github.xn32:json5k", version.ref = "json5k" }
+ktoml-core = { module = "com.akuleshov7:ktoml-core", version.ref = "ktoml" }
+kaml = { module = "com.charleskorn.kaml:kaml", version.ref = "kaml" }
+
+[plugins]
+kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

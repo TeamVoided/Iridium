@@ -1,11 +1,12 @@
 plugins {
     `kotlin-dsl`
-    kotlin("plugin.serialization") version embeddedKotlinVersion
+//    kotlin("plugin.serialization") version embeddedKotlinVersion
+    alias(libs.plugins.kotlin.plugin.serialization) version embeddedKotlinVersion
     id("maven-publish")
 }
 
 group = "org.teamvoided.iridium"
-version = "3.1.9"
+version = "3.1.10"
 
 repositories {
     mavenCentral()
@@ -13,23 +14,49 @@ repositories {
     maven("https://maven.fabricmc.net/")
 }
 
+//val dotenvFile = File("${project.projectDir}/.env")
+//if (dotenvFile.exists()) {
+//    dotenvFile.forEachLine { line ->
+//        val (key, value) = line.split("=", limit = 2)
+//        if (key.isNotBlank() && value.isNotBlank()) {
+//            println("[$key,$value]")
+//            System.setProperty(key, value)
+//        }
+//    }
+//} else {
+//    println("No .env file found! No variables to load")
+//}
+//val myEnvVar = System.getProperty("KEY")
+//println(myEnvVar)
+
 dependencies {
     fun pluginDep(id: String, version: String) = "${id}:${id}.gradle.plugin:${version}"
 
-    val kotlinVersion = "1.9.0"
+    val kotlinVersion = libs.versions.kotlin.get()
 
     compileOnly(kotlin("gradle-plugin", embeddedKotlinVersion))
     runtimeOnly(kotlin("gradle-plugin", kotlinVersion))
     compileOnly(pluginDep("org.jetbrains.kotlin.plugin.serialization", embeddedKotlinVersion))
     runtimeOnly(pluginDep("org.jetbrains.kotlin.plugin.serialization", kotlinVersion))
-
-    implementation(pluginDep("fabric-loom", "1.3-SNAPSHOT"))
+    /*
+    implementation(pluginDep("fabric-loom", "1.6-SNAPSHOT"))
     implementation(pluginDep("com.modrinth.minotaur", "2.7.5"))
+     */
+    implementation(libs.fabric.loom)
+    implementation(libs.modrinth.minotaur)
+    implementation(libs.curseforgegradle)
 
+    /*
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
     implementation("io.github.xn32:json5k:0.3.0")
-    implementation("com.akuleshov7:ktoml-core:0.5.0")
     implementation("com.charleskorn.kaml:kaml:0.54.0")
+     */
+    implementation(libs.kotlinx.serialization)
+    implementation(libs.json5k)
+//    implementation(libs.ktoml) // This breaks and im too lazy to fix it rn
+    implementation("com.akuleshov7:ktoml-core:0.5.0")
+    implementation(libs.kaml)
+
 }
 
 gradlePlugin {
