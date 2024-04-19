@@ -1,6 +1,5 @@
 package org.teamvoided.iridium
 
-import gradle.kotlin.dsl.accessors._91d94c579d82ace271d001663ba75e18.ext
 import net.fabricmc.loom.bootstrap.LoomGradlePluginBootstrap
 import net.fabricmc.loom.task.RemapJarTask
 import org.gradle.api.Plugin
@@ -58,16 +57,14 @@ class IridiumPlugin : Plugin<Project> {
 fun loadDotEnv(project: Project) {
     val dotenvFile = File("${project.projectDir}/.env")
     if (dotenvFile.exists()) {
+        var count = 0
         dotenvFile.forEachLine { line ->
             val (key, value) = line.split("=", limit = 2)
             if (key.isNotBlank() && value.isNotBlank()) {
                 System.setProperty(key, value)
-//                project.ext.set(key, value)
+                count++
             }
         }
-        println("Loaded env vars!")
-//        println(".env loading is disabled for now.")
-    } else {
-        println("No .env file found! No variables to load")
-    }
+        println("Loaded $count variables from .env!")
+    } else println("No .env file found! No variables to load")
 }

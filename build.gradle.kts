@@ -1,33 +1,26 @@
 plugins {
     `kotlin-dsl`
-//    kotlin("plugin.serialization") version embeddedKotlinVersion
     alias(libs.plugins.kotlin.plugin.serialization) version embeddedKotlinVersion
     id("maven-publish")
 }
 
+val dotenvFile = File("$projectDir/.env")
+if (dotenvFile.exists()) {
+    dotenvFile.forEachLine { line ->
+        val (key, value) = line.split("=", limit = 2)
+        if (key.isNotBlank() && value.isNotBlank()) System.setProperty(key, value)
+    }
+    println("Loaded .env vars!")
+} else println("No .env file found! No variables to load")
+
 group = "org.teamvoided.iridium"
-version = "3.1.10"
+version = "3.2.0"
 
 repositories {
     mavenCentral()
     gradlePluginPortal()
     maven("https://maven.fabricmc.net/")
 }
-
-//val dotenvFile = File("${project.projectDir}/.env")
-//if (dotenvFile.exists()) {
-//    dotenvFile.forEachLine { line ->
-//        val (key, value) = line.split("=", limit = 2)
-//        if (key.isNotBlank() && value.isNotBlank()) {
-//            println("[$key,$value]")
-//            System.setProperty(key, value)
-//        }
-//    }
-//} else {
-//    println("No .env file found! No variables to load")
-//}
-//val myEnvVar = System.getProperty("KEY")
-//println(myEnvVar)
 
 dependencies {
     fun pluginDep(id: String, version: String) = "${id}:${id}.gradle.plugin:${version}"
@@ -38,23 +31,14 @@ dependencies {
     runtimeOnly(kotlin("gradle-plugin", kotlinVersion))
     compileOnly(pluginDep("org.jetbrains.kotlin.plugin.serialization", embeddedKotlinVersion))
     runtimeOnly(pluginDep("org.jetbrains.kotlin.plugin.serialization", kotlinVersion))
-    /*
-    implementation(pluginDep("fabric-loom", "1.6-SNAPSHOT"))
-    implementation(pluginDep("com.modrinth.minotaur", "2.7.5"))
-     */
+
     implementation(libs.fabric.loom)
     implementation(libs.modrinth.minotaur)
     implementation(libs.curseforgegradle)
 
-    /*
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
-    implementation("io.github.xn32:json5k:0.3.0")
-    implementation("com.charleskorn.kaml:kaml:0.54.0")
-     */
     implementation(libs.kotlinx.serialization)
     implementation(libs.json5k)
-//    implementation(libs.ktoml) // This breaks and im too lazy to fix it rn
-    implementation("com.akuleshov7:ktoml-core:0.5.0")
+    implementation(libs.ktoml)
     implementation(libs.kaml)
 
 }
@@ -94,7 +78,13 @@ publishing {
         maven {
             name = "TeamVoided"
             url = uri("https://maven.teamvoided.org/releases")
-            credentials(PasswordCredentials::class)
+
+            credentials {
+                username = System.getProperty("TeamVoidedUsername")
+                    ?: throw NullPointerException("Variable TeamVoidedUsername not found!")
+                password = System.getProperty("TeamVoidedPassword")
+                    ?: throw NullPointerException("Variable TeamVoidedPassword not found!")
+            }
         }
     }
 }

@@ -86,16 +86,39 @@ object IridiumLoader {
     @Serializable
     data class Mappings(
         @YamlComment(
-            "You have 6 mapping types", "MOJANG: The official Mojang mappings", "YARN: Yarn mappings", "PARCHMENT: Parchment mappings", "QUILT: Quilt mappings", "MOJPARCH: Parchment layered on top of the official Mojang mappings", "MOJYARN: Yarn layered on top of the official Mojang mappings"
+            "You have 7 mapping types",
+            "MOJANG: The official Mojang mappings",
+            "YARN: Yarn mappings",
+            "PARCHMENT: Parchment mappings",
+            "QUILT: Quilt mappings",
+            "MOJPARCH: Parchment layered on top of the official Mojang mappings",
+            "MOJYARN: Yarn layered on top of the official Mojang mappings",
+            "CUSTOM: Custom mapping jar. Uses mappings version as file location"
         ) @TomlComments(
-            "You have 6 mapping types", "MOJANG: The official Mojang mappings", "YARN: Yarn mappings", "PARCHMENT: Parchment mappings", "QUILT: Quilt mappings", "MOJPARCH: Parchment layered on top of the official Mojang mappings", "MOJYARN: Yarn layered on top of the official Mojang mappings"
+            "You have 7 mapping types",
+            "MOJANG: The official Mojang mappings",
+            "YARN: Yarn mappings",
+            "PARCHMENT: Parchment mappings",
+            "QUILT: Quilt mappings",
+            "MOJPARCH: Parchment layered on top of the official Mojang mappings",
+            "MOJYARN: Yarn layered on top of the official Mojang mappings",
+            "CUSTOM: Custom mapping jar. Uses mappings version as file location"
         ) @SerialComment(
-            "You have 6 mapping types\nMOJANG: The official Mojang mappings\nYARN: Yarn mappings\nPARCHMENT: Parchment mappings\nQUILT: Quilt mappings\nMOJPARCH: Parchment layered on top of the official Mojang mappings\nMOJYARN: Yarn layered on top of the official Mojang mappings"
-        ) val type: MappingsType,
+            """You have 7 mapping types
+MOJANG: The official Mojang mappings
+YARN: Yarn mappings
+PARCHMENT: Parchment mappings
+QUILT: Quilt mappings
+MOJPARCH: Parchment layered on top of the official Mojang mappings
+MOJYARN: Yarn layered on top of the official Mojang mappings
+CUSTOM: Custom mapping jar. Uses mappings version as file location
+"""
+        )
+        val type: MappingsType,
         val version: String?
     )
 
     @Serializable
-    enum class MappingsType { MOJANG, YARN, PARCHMENT, QUILT, MOJPARCH, MOJYARN }
+    enum class MappingsType { MOJANG, YARN, PARCHMENT, QUILT, MOJPARCH, MOJYARN, CUSTOM }
 }
 

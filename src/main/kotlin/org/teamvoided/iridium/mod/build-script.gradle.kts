@@ -58,6 +58,9 @@ dependencies {
         MappingsType.QUILT -> {
             mappings("org.quiltmc:quilt-mappings:${mappings.version}:intermediary-v2")
         }
+        MappingsType.CUSTOM -> {
+            mappings(file(mappings.version!!))
+        }
     }
 
     modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")

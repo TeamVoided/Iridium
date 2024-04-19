@@ -49,7 +49,6 @@ afterEvaluate {
                     val usernameEnv = System.getProperty("${nameNullable}Username") ?: throw NullPointerException("Variable ${nameNullable}Username not found!")
                     val passwordEnv = System.getProperty("${nameNullable}Password") ?: throw NullPointerException("Variable ${nameNullable}Password not found!")
 
-//                    (PasswordCredentials::class)
                     credentials {
                         username = usernameEnv
                         password = passwordEnv
