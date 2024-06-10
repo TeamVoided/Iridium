@@ -44,4 +44,13 @@ object Config {
 
     val modules
         get() = IridiumLoader.config.modules
+
+    val modDescription
+        get() = IridiumLoader.config.modDescription
+
+    val badges
+        get() = IridiumLoader.config.badges
+
+    val disableKotlin
+        get() = IridiumLoader.config.disableKotlin
 }

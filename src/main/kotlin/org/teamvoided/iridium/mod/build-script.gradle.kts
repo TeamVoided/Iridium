@@ -3,6 +3,8 @@ package org.teamvoided.iridium.mod
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.teamvoided.iridium.config.Config.authors
+import org.teamvoided.iridium.config.Config.badges
+import org.teamvoided.iridium.config.Config.disableKotlin
 import org.teamvoided.iridium.config.Config.discordServerInviteId
 import org.teamvoided.iridium.config.Config.fabricApiVersion
 import org.teamvoided.iridium.config.Config.fabricLangKotlinVersion
@@ -12,7 +14,9 @@ import org.teamvoided.iridium.config.Config.license
 import org.teamvoided.iridium.config.Config.majorMinecraftVersion
 import org.teamvoided.iridium.config.Config.mappings
 import org.teamvoided.iridium.config.Config.minecraftVersion
+import org.teamvoided.iridium.config.Config.modDescription
 import org.teamvoided.iridium.config.IridiumLoader.MappingsType
+import org.teamvoided.iridium.helper.makeCustom
 import java.io.FileReader
 import java.io.FileWriter
 
@@ -35,37 +39,43 @@ dependencies {
         MappingsType.MOJANG -> {
             mappings(loom.officialMojangMappings())
         }
+
         MappingsType.YARN -> {
             mappings("net.fabricmc:yarn:${mappings.version}")
         }
+
         MappingsType.PARCHMENT -> {
             mappings(loom.layered {
                 parchment("org.parchmentmc.data:parchment-${mappings.version}")
             })
         }
+
         MappingsType.MOJPARCH -> {
             mappings(loom.layered {
                 parchment("org.parchmentmc.data:parchment-${mappings.version}")
                 officialMojangMappings()
             })
         }
+
         MappingsType.MOJYARN -> {
             mappings(loom.layered {
                 mappings("net.fabricmc:yarn:${mappings.version}")
                 officialMojangMappings()
             })
         }
+
         MappingsType.QUILT -> {
             mappings("org.quiltmc:quilt-mappings:${mappings.version}:intermediary-v2")
         }
+
         MappingsType.CUSTOM -> {
             mappings(file(mappings.version!!))
         }
     }
 
-    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
     modImplementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
-    modImplementation("net.fabricmc:fabric-language-kotlin:$fabricLangKotlinVersion")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
+    if (!disableKotlin) modImplementation("net.fabricmc:fabric-language-kotlin:$fabricLangKotlinVersion")
 }
 
 val buildScriptExtension: BuildScriptExtension = extensions.create("modSettings", BuildScriptExtension::class.java)
@@ -91,7 +101,11 @@ afterEvaluate {
             val regex = Regex("(?i)LICENSE\\.?.*")
 
             val licenseFiles = files.filter { regex.matches(it.name) }
-            val newFiles = licenseFiles.map { resourceDir.resolve(it.toString().removePrefix("$rootDir${File.separator}")).absoluteFile }
+            val newFiles = licenseFiles.map {
+                resourceDir.resolve(
+                    it.toString().removePrefix("$rootDir${File.separator}")
+                ).absoluteFile
+            }
 
             outputs.files(newFiles)
 
@@ -106,7 +120,8 @@ afterEvaluate {
         }
 
         val creditsTask = register("iridiumCredits") {
-            val credits = "$modName was built with the Iridium gradle plugin developed by TeamVoided over at https://teamvoided.org"
+            val credits =
+                "$modName was built with the Iridium gradle plugin developed by TeamVoided over at https://teamvoided.org"
             val creditsFile = buildDir.resolve("resources/main/credits.iridium")
 
             inputs.property("credits", credits)
@@ -129,7 +144,7 @@ afterEvaluate {
                 modId,
                 project.version.toString(),
                 modName,
-                project.description.toString(),
+                modDescription,
                 authors,
                 modEntrypoints.mapValuesTo(LinkedHashMap()) {
                     it.value.map { target -> ModConfiguration.Entrypoint("kotlin", target) }
@@ -149,8 +164,13 @@ afterEvaluate {
                 ),
                 license,
                 if (isModParent) "assets/$modId/icon.png" else customModIcon,
-                if (isModParent) null else ModConfiguration.Custom(ModConfiguration.Custom.ModMenu(modParent!!)),
+                makeCustom(isModParent, modParent, badges),
             )
+            if (disableKotlin) {
+                modConfig.entrypoints =
+                    LinkedHashMap(modConfig.entrypoints.mapValues { op -> op.value.map { it.adapter = ""; it } })
+                modConfig.depends = LinkedHashMap(modConfig.depends.filter { it.key != "fabric-language-kotlin" })
+            }
 
             val modDotJson = buildDir.resolve("resources/main/fabric.mod.json")
 

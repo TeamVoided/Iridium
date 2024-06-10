@@ -4,6 +4,8 @@ import net.fabricmc.loom.api.LoomGradleExtensionAPI
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.get
 import org.teamvoided.iridium.config.Config
+import org.teamvoided.iridium.helper.resolveMCVersion
+import org.teamvoided.iridium.helper.resolveVersion
 import java.io.File
 
 open class BuildScriptExtension(val project: Project) {
@@ -13,11 +15,11 @@ open class BuildScriptExtension(val project: Project) {
     private var modMixinFiles = mutableListOf<String>()
     private var accessWidener: String? = null
     private var modDepends = linkedMapOf(
-        Pair("fabricloader", ">=${Config.fabricLoaderVersion}"),
-        Pair("fabric-api", ">=${Config.fabricApiVersion}"),
-        Pair("fabric-language-kotlin", ">=${Config.fabricLangKotlinVersion}"),
-        Pair("minecraft", "~${Config.majorMinecraftVersion}"),
-        Pair("java", ">=17")
+        "fabricloader" to resolveVersion(Config.fabricLoaderVersion),
+        "fabric-api" to resolveVersion(Config.fabricApiVersion),
+        "fabric-language-kotlin" to resolveVersion(Config.fabricLangKotlinVersion),
+        "minecraft" to resolveMCVersion(Config.majorMinecraftVersion),
+        "java" to ">=17"
     )
     private var isModParent = false
     private val modParent get() = if (!isModParent) Config.modId else null

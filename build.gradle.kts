@@ -13,10 +13,11 @@ if (dotenvFile.exists()) {
     println("Loaded .env vars!")
 } else println("No .env file found! No variables to load")
 
-group = "org.teamvoided.iridium"
-version = "3.2.0"
+group = property("group")!!
+version = property("version")!!
 
 repositories {
+    mavenLocal()
     mavenCentral()
     gradlePluginPortal()
     maven("https://maven.fabricmc.net/")

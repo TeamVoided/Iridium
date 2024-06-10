@@ -5,6 +5,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 
+@Deprecated("Was made for when fabric-loom was broken")
 object JarHelper {
     fun computeDestJarPath(from: Project, to: Project, release: Boolean = false): File {
         val fromJar =

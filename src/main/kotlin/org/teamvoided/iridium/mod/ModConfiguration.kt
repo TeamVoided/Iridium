@@ -1,6 +1,7 @@
 package org.teamvoided.iridium.mod
 
 import kotlinx.serialization.Serializable
+import org.teamvoided.iridium.helper.EntrypointSerializer
 
 @Serializable
 data class ModConfiguration(
@@ -10,7 +11,7 @@ data class ModConfiguration(
     var name: String,
     var description: String,
     var authors: List<String>,
-    var entrypoints: LinkedHashMap<String, List<Entrypoint>> = linkedMapOf(),
+    var entrypoints: LinkedHashMap<String, List<@Serializable(with = EntrypointSerializer::class) Entrypoint>> = linkedMapOf(),
     var mixins: List<String> = emptyList(),
     var accessWidener: String? = null,
     var depends: LinkedHashMap<String, String>,
@@ -23,6 +24,7 @@ data class ModConfiguration(
 ) {
     fun contact(homepage: String, issues: String, sources: String, discord: String) =
         Contact(homepage, issues, sources, discord)
+
     @Serializable
     data class Contact(
         val homepage: String,
@@ -33,28 +35,35 @@ data class ModConfiguration(
 
     fun entrypoint(adapter: String, value: String) =
         Entrypoint(adapter, value)
+
     @Serializable
     data class Entrypoint(
-        val adapter: String,
+        var adapter: String,
         val value: String,
     )
 
     fun custom(modmenu: Custom.ModMenu?) =
         Custom(modmenu)
+
     fun modMenu(parent: String) =
         Custom.ModMenu(parent)
+
     @Serializable
     data class Custom(
         val modmenu: ModMenu? = null,
     ) {
+        constructor(parent: String?, badges: List<String>) : this(ModMenu(parent, badges))
+
         @Serializable
         data class ModMenu(
-            val parent: String,
+            val parent: String?,
+            val badges: List<String> = emptyList(),
         )
     }
 
     fun jarFile(file: String) =
         JarFile(file)
+
     @Serializable
     data class JarFile(val file: String)
 }
