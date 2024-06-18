@@ -90,6 +90,7 @@ afterEvaluate {
     val isModParent = buildScriptExtension.isModParent()
     val modParent = buildScriptExtension.modParent()
     val customModIcon: String? = buildScriptExtension.customIcon()
+    val accessWidener = buildScriptExtension.accessWidener()
 
     base.archivesName.set(modId)
 
@@ -150,7 +151,7 @@ afterEvaluate {
                     it.value.map { target -> ModConfiguration.Entrypoint("kotlin", target) }
                 },
                 modMixinFiles,
-                null,
+                accessWidener,
                 linkedMapOf(
                     "fabric-api" to "*",
                     "fabric-language-kotlin" to ">=1.8.0+kotlin.1.7.0",
