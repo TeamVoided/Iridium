@@ -46,8 +46,18 @@ afterEvaluate {
                 url = uri(urlNullable ?: "")
 
                 if (nameNullable != null) {
-                    val usernameEnv = System.getProperty("${nameNullable}Username") ?: throw NullPointerException("Variable ${nameNullable}Username not found!")
-                    val passwordEnv = System.getProperty("${nameNullable}Password") ?: throw NullPointerException("Variable ${nameNullable}Password not found!")
+                    val usernameEnv = System.getProperty("${nameNullable}Username")
+                    val passwordEnv = System.getProperty("${nameNullable}Password")
+
+                    if (usernameEnv == null) {
+                        println("[WARNING] Variable $nameNullable Username not found!")
+                        return@maven
+                    }
+
+                    if (passwordEnv == null) {
+                        println("[WARNING] Variable $nameNullable Password not found!")
+                        return@maven
+                    }
 
                     credentials {
                         username = usernameEnv
