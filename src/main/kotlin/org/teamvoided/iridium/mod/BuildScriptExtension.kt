@@ -15,8 +15,8 @@ open class BuildScriptExtension(val project: Project) {
     private var modMixinFiles = mutableListOf<String>()
     private var accessWidener: String? = null
     private var modDepends = linkedMapOf(
-        "fabricloader" to resolveVersion(Config.fabricLoaderVersion),
-        "fabric-api" to resolveVersion(Config.fabricApiVersion),
+        "fabricloader" to "*",
+        "fabric-api" to "*",
         "fabric-language-kotlin" to resolveVersion(Config.fabricLangKotlinVersion),
         "minecraft" to resolveMCVersion(Config.majorMinecraftVersion),
         "java" to ">=17"
@@ -24,12 +24,17 @@ open class BuildScriptExtension(val project: Project) {
     private var isModParent = false
     private val modParent get() = if (!isModParent) Config.modId else null
     private var customModIcon: String? = null
+    var supportsTransition = false
 
     fun modId() = modId
-    fun modId(modId: String) { this.modId = modId }
+    fun modId(modId: String) {
+        this.modId = modId
+    }
 
     fun modName() = modName
-    fun modName(modName: String) { this.modName = modName }
+    fun modName(modName: String) {
+        this.modName = modName
+    }
 
     fun entrypoints() = modEntrypoints
     fun entrypoint(name: String, value: String) {
@@ -43,7 +48,9 @@ open class BuildScriptExtension(val project: Project) {
     }
 
     fun mixinFiles() = modMixinFiles
-    fun mixinFile(mixinFile: String) { modMixinFiles += mixinFile }
+    fun mixinFile(mixinFile: String) {
+        modMixinFiles += mixinFile
+    }
 
     fun accessWidener() = accessWidener
     fun accessWidener(accessWidener: String) {
@@ -52,15 +59,26 @@ open class BuildScriptExtension(val project: Project) {
     }
 
     fun dependencies() = modDepends
-    fun dependency(id: String, versionDeclaration: String) { modDepends[id] = versionDeclaration }
+    fun dependency(id: String, versionDeclaration: String) {
+        modDepends[id] = versionDeclaration
+    }
 
     fun isModParent() = isModParent
-    fun isModParent(isModParent: Boolean) { this.isModParent = isModParent }
+    fun isModParent(isModParent: Boolean) {
+        this.isModParent = isModParent
+    }
 
     fun modParent() = modParent
 
     fun customIcon() = customModIcon
-    fun customIcon(iconPath: String) { customModIcon = iconPath }
+    fun customIcon(iconPath: String) {
+        customModIcon = iconPath
+    }
+
+    fun supportsTransition() = supportsTransition
+    fun enableTransition() {
+        supportsTransition = true
+    }
 
     fun mutation(mutation: ModConfiguration.() -> Unit) =
         ModConfigurationMutations.addMutation(project.name) { mutation(it) }

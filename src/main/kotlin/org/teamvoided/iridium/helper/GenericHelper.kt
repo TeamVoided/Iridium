@@ -10,10 +10,13 @@ fun resolveMCVersion(version: String): String {
     return if (version.trim() == "*") "*" else "~$version"
 }
 
-fun makeCustom(isModParent: Boolean, modParent: String?, badges: List<String>): ModConfiguration.Custom? {
-    if (isModParent && badges.isEmpty()) return null
-    return modMenu(modParent, badges)
+fun makeCustom(
+    isModParent: Boolean, modParent: String?,
+    badges: List<String>, supportsTransition: Boolean
+): ModConfiguration.Custom? {
+    if (isModParent && !supportsTransition && badges.isEmpty()) return null
+    return ModConfiguration.Custom(if (badges.isEmpty()) null else modMenu(modParent, badges), supportsTransition)
 }
 
-fun modMenu(parent: String?, badges: List<String>): ModConfiguration.Custom =
-    ModConfiguration.Custom(ModConfiguration.Custom.ModMenu(parent, badges))
+fun modMenu(parent: String?, badges: List<String>): ModConfiguration.Custom.ModMenu =
+    ModConfiguration.Custom.ModMenu(parent, badges)

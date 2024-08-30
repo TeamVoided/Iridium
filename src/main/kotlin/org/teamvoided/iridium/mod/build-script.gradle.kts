@@ -91,6 +91,7 @@ afterEvaluate {
     val modParent = buildScriptExtension.modParent()
     val customModIcon: String? = buildScriptExtension.customIcon()
     val accessWidener = buildScriptExtension.accessWidener()
+    val supportsTransition = buildScriptExtension.supportsTransition()
 
     base.archivesName.set(modId)
 
@@ -165,7 +166,7 @@ afterEvaluate {
                 ),
                 license,
                 if (isModParent) "assets/$modId/icon.png" else customModIcon,
-                makeCustom(isModParent, modParent, badges),
+                makeCustom(isModParent, modParent, badges, supportsTransition),
             )
             if (disableKotlin) {
                 modConfig.entrypoints =

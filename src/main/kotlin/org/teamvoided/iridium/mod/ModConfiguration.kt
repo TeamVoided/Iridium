@@ -42,16 +42,12 @@ data class ModConfiguration(
         val value: String,
     )
 
-    fun custom(modmenu: Custom.ModMenu?) =
-        Custom(modmenu)
-
-    fun modMenu(parent: String) =
-        Custom.ModMenu(parent)
+    fun custom(modmenu: Custom.ModMenu?) = Custom(modmenu)
+    fun modMenu(parent: String) = Custom.ModMenu(parent)
 
     @Serializable
-    data class Custom(
-        val modmenu: ModMenu? = null,
-    ) {
+    data class Custom(val modmenu: ModMenu? = null, val remapping: Boolean = false) {
+        @Deprecated("No longer used")
         constructor(parent: String?, badges: List<String>) : this(ModMenu(parent, badges))
 
         @Serializable
