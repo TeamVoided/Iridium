@@ -11,6 +11,9 @@ import java.io.File
 open class BuildScriptExtension(val project: Project) {
     private var modId = Config.modId
     private var modName = Config.projectTitle
+    val modVersion = Config.modVersion
+    val group = Config.group
+
     private var modEntrypoints = linkedMapOf<String, List<String>>()
     private var modMixinFiles = mutableListOf<String>()
     private var accessWidener: String? = null

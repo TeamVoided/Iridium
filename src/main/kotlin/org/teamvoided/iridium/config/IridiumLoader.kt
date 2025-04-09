@@ -3,7 +3,9 @@ package org.teamvoided.iridium.config
 import com.akuleshov7.ktoml.Toml
 import com.akuleshov7.ktoml.annotations.TomlComments
 import com.charleskorn.kaml.Yaml
+import com.charleskorn.kaml.YamlComment
 import io.github.xn32.json5k.Json5
+import io.github.xn32.json5k.SerialComment
 import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 import okio.use
@@ -52,8 +54,12 @@ object IridiumLoader {
 
     @Serializable
     data class Config(
+        @YamlComment("Yaml is been DEPRECATED, please switch to TOML")
+        @SerialComment("Json5 is been DEPRECATED, please switch to TOML")
         var projectTitle: String,
         var modId: String,
+        var modVersion: String,
+        var group: String,
         var githubRepo: String,
         var discordServerInviteId: String,
         var authors: List<String>,
@@ -73,15 +79,17 @@ object IridiumLoader {
         constructor() : this(
             "Example Title",
             "mod_id_here",
+            "1.0.0",
+            "com.example.mod",
             "yourGithubNameHere/repositoryNameHere",
             "discordServerInviteIdHere",
             listOf("your-name-here", "some1-elses-name-here"),
             "1.21",
-            "1.21.1",
-            Mappings(MappingsType.YARN, "1.21.1+build.3"),
-            "0.16.3",
-            "0.103.0+1.21.1",
-            "1.12.1+kotlin.2.0.20",
+            "1.21.5",
+            Mappings(MappingsType.YARN, "1.21.5+build.1"),
+            "0.16.13",
+            "0.119.9+1.21.5",
+            "1.13.2+kotlin.2.1.20",
             "MIT",
             listOf(),
             "Very Good Description",

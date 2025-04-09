@@ -1,14 +1,14 @@
 [versions]
-kotlin = "2.0.0"
+kotlin = "2.1.20"
 
-kotlinx-serialization = "1.6.3"
+kotlinx-serialization = "1.8.1"
 
-fabric-loom = "1.6-SNAPSHOT"
+fabric-loom = "1.10-SNAPSHOT"
 modrinth-minotaur = "2.8.7"
-curseforgegradle = "1.1.15"
+curseforgegradle = "1.1.26"
 
 json5k = "0.3.0"
-ktoml = "0.5.1"
+ktoml = "0.6.0"
 kaml = "0.58.0"
 
 [libraries]

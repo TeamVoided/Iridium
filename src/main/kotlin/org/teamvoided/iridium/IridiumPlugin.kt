@@ -1,6 +1,6 @@
 package org.teamvoided.iridium
 
-import net.fabricmc.loom.bootstrap.LoomGradlePluginBootstrap
+import net.fabricmc.loom.LoomGradlePlugin
 import net.fabricmc.loom.task.RemapJarTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -23,7 +23,7 @@ class IridiumPlugin : Plugin<Project> {
 
         project.evaluationDependsOnChildren()
 
-        project.plugins.apply(LoomGradlePluginBootstrap::class)
+        project.plugins.apply(LoomGradlePlugin::class)
         project.plugins.apply(BuildScriptPlugin::class)
 
         /*

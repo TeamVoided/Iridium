@@ -79,7 +79,6 @@ dependencies {
 }
 
 val buildScriptExtension: BuildScriptExtension = extensions.create("modSettings", BuildScriptExtension::class.java)
-extensions.create("dependencyHelper", DependencyHelperExtension::class.java, project)
 
 afterEvaluate {
     val modId = buildScriptExtension.modId()
@@ -93,6 +92,8 @@ afterEvaluate {
     val accessWidener = buildScriptExtension.accessWidener()
     val supportsTransition = buildScriptExtension.supportsTransition()
 
+    version = buildScriptExtension.modVersion
+    group = buildScriptExtension.group
     base.archivesName.set(modId)
 
     tasks {
