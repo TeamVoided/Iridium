@@ -1,6 +1,5 @@
 package org.teamvoided.iridium.mod
 
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.teamvoided.iridium.config.Config.authors
 import org.teamvoided.iridium.config.Config.badges
@@ -14,7 +13,6 @@ import org.teamvoided.iridium.config.Config.license
 import org.teamvoided.iridium.config.Config.majorMinecraftVersion
 import org.teamvoided.iridium.config.Config.mappings
 import org.teamvoided.iridium.config.Config.minecraftVersion
-import org.teamvoided.iridium.config.Config.modDescription
 import org.teamvoided.iridium.config.IridiumLoader.MappingsType
 import org.teamvoided.iridium.helper.makeCustom
 import java.io.FileReader
@@ -145,9 +143,9 @@ afterEvaluate {
             val modConfig = ModConfiguration(
                 1,
                 modId,
-                project.version.toString(),
+                buildScriptExtension.modVersion,
                 modName,
-                modDescription,
+                buildScriptExtension.modDescription,
                 authors,
                 modEntrypoints.mapValuesTo(LinkedHashMap()) {
                     it.value.map { target -> ModConfiguration.Entrypoint("kotlin", target) }
@@ -157,7 +155,7 @@ afterEvaluate {
                 linkedMapOf(
                     "fabric-api" to "*",
                     "fabric-language-kotlin" to ">=1.8.0+kotlin.1.7.0",
-                    "minecraft" to "${majorMinecraftVersion}.x"
+                    "minecraft" to majorMinecraftVersion
                 ).apply { putAll(modDepends) },
                 ModConfiguration.Contact(
                     "https://github.com/$githubRepo",

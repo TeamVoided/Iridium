@@ -84,7 +84,7 @@ object IridiumLoader {
             "yourGithubNameHere/repositoryNameHere",
             "discordServerInviteIdHere",
             listOf("your-name-here", "some1-elses-name-here"),
-            "1.21",
+            ">=1.21",
             "1.21.5",
             Mappings(MappingsType.YARN, "1.21.5+build.1"),
             "0.16.13",

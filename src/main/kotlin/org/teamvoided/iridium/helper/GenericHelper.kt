@@ -6,10 +6,6 @@ fun resolveVersion(version: String): String {
     return if (version.trim() == "*") "*" else ">=$version"
 }
 
-fun resolveMCVersion(version: String): String {
-    return if (version.trim() == "*") "*" else "~$version"
-}
-
 fun makeCustom(
     isModParent: Boolean, modParent: String?,
     badges: List<String>, supportsTransition: Boolean

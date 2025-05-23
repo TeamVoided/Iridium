@@ -4,15 +4,15 @@ import net.fabricmc.loom.api.LoomGradleExtensionAPI
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.get
 import org.teamvoided.iridium.config.Config
-import org.teamvoided.iridium.helper.resolveMCVersion
 import org.teamvoided.iridium.helper.resolveVersion
 import java.io.File
 
 open class BuildScriptExtension(val project: Project) {
     private var modId = Config.modId
     private var modName = Config.projectTitle
-    val modVersion = Config.modVersion
-    val group = Config.group
+    var modVersion = Config.modVersion
+    var group = Config.group
+    var modDescription = Config.modDescription
 
     private var modEntrypoints = linkedMapOf<String, List<String>>()
     private var modMixinFiles = mutableListOf<String>()
@@ -21,7 +21,7 @@ open class BuildScriptExtension(val project: Project) {
         "fabricloader" to "*",
         "fabric-api" to "*",
         "fabric-language-kotlin" to resolveVersion(Config.fabricLangKotlinVersion),
-        "minecraft" to resolveMCVersion(Config.majorMinecraftVersion),
+        "minecraft" to Config.majorMinecraftVersion,
         "java" to ">=17"
     )
     private var isModParent = false
