@@ -41,9 +41,8 @@ object DependencyHelper {
         dependencyType: DependencyType = DependencyType.EMBEDDED,
     ): Dependency {
         addModrinthDependency(project, path, dependencyType)
-        val projectJar = project.project(":$path").tasks.getByName("remapJar").outputs.files.singleFile
-
         if (config.mappings.type != IridiumLoader.MappingsType.NONE) {
+            val projectJar = project.project(":$path").tasks.getByName("remapJar").outputs.files.singleFile
             project.tasks.getByName("remapJar") {
                 this as RemapJarTask
                 nestedJars.from(projectJar)
