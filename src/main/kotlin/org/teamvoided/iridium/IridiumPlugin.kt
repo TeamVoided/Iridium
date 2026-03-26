@@ -29,7 +29,7 @@ class IridiumPlugin : Plugin<Project> {
 
         project.extensions.getByType(BuildScriptExtension::class).isModParent(true)
 
-        if (config.mappings.type != IridiumLoader.MappingsType.NONE) {
+        if (config.mappings.type.remaps()) {
             project.tasks.withType(RemapJarTask::class.java) {
                 addNestedDependencies.set(true)
             }

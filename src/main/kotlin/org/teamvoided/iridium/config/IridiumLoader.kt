@@ -107,9 +107,14 @@ object IridiumLoader {
             "CUSTOM: Custom mapping jar. Uses mappings version as file location",
             "NONE: Use for unmapped versions of the game (26.1 and up)."
         )
-        val type: MappingsType, val version: String?
+        val type: MappingsType,
+        val version: String?,
     )
 
     @Serializable
-    enum class MappingsType { MOJANG, YARN, PARCHMENT, QUILT, MOJPARCH, MOJYARN, CUSTOM, NONE }
+    enum class MappingsType {
+        MOJANG, YARN, PARCHMENT, QUILT, MOJPARCH, MOJYARN, CUSTOM, NONE;
+
+        fun remaps() = this != MappingsType.NONE
+    }
 }

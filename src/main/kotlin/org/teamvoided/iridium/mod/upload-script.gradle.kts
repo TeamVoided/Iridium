@@ -4,6 +4,7 @@ import com.modrinth.minotaur.dependencies.DependencyType
 import org.teamvoided.iridium.config.Config.minecraftVersion
 import org.teamvoided.iridium.config.Config.projectState
 import org.teamvoided.iridium.config.Config.projectTitle
+import org.teamvoided.iridium.config.IridiumLoader.config
 
 
 plugins {
@@ -45,7 +46,7 @@ afterEvaluate {
             gameVersions.set(versions)
             loaders.set(listOf("fabric"))
 
-            uploadFile.set(tasks.remapJar.get())
+            uploadFile.set(if (config.mappings.type.remaps()) tasks.remapJar.get() else tasks.jar.get())
 
             if (uploadScriptExtension.autoAddDependsOn) autoAddDependsOn = true
             if (modrinthDeps.isNotEmpty()) dependencies.set(modrinthDeps)
@@ -76,7 +77,8 @@ afterEvaluate {
             debugMode = uploadScriptExtension.debugMode
 
             // The main file to upload
-            upload(curseId, tasks.remapJar.get()) {
+            var jarFile = if (config.mappings.type.remaps()) tasks.remapJar.get() else tasks.jar.get()
+            upload(curseId, jarFile) {
                 displayName = name
                 releaseType = projectState
 
