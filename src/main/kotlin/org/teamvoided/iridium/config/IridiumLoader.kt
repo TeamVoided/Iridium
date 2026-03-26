@@ -80,12 +80,12 @@ object IridiumLoader {
             "yourGithubNameHere/repositoryNameHere",
             "discordServerInviteIdHere",
             listOf("your-name-here", "some1-elses-name-here"),
-            ">=1.21",
-            "1.21.5",
-            Mappings(MappingsType.YARN, "1.21.5+build.1"),
-            "0.16.13",
-            "0.119.9+1.21.5",
-            "1.13.2+kotlin.2.1.20",
+            ">=26.1",
+            "26.1",
+            Mappings(MappingsType.NONE, null),
+            "0.18.5",
+            "0.144.3+26.1",
+            "1.13.10+kotlin.2.3.20",
             "MIT",
             listOf(),
             "Very Good Description",
@@ -104,11 +104,12 @@ object IridiumLoader {
             "QUILT: Quilt mappings",
             "MOJPARCH: Parchment layered on top of the official Mojang mappings",
             "MOJYARN: Yarn layered on top of the official Mojang mappings",
-            "CUSTOM: Custom mapping jar. Uses mappings version as file location"
+            "CUSTOM: Custom mapping jar. Uses mappings version as file location",
+            "NONE: Use for unmapped versions of the game (26.1 and up)."
         )
         val type: MappingsType, val version: String?
     )
 
     @Serializable
-    enum class MappingsType { MOJANG, YARN, PARCHMENT, QUILT, MOJPARCH, MOJYARN, CUSTOM }
+    enum class MappingsType { MOJANG, YARN, PARCHMENT, QUILT, MOJPARCH, MOJYARN, CUSTOM, NONE }
 }

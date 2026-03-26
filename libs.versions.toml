@@ -1,14 +1,14 @@
 [versions]
-kotlin = "2.1.20"
+kotlin = "2.3.20"
 
-kotlinx-serialization = "1.8.1"
+kotlinx-serialization = "1.10.0"
 
 fabric-loom = "1.10-SNAPSHOT"
-modrinth-minotaur = "2.8.7"
+modrinth-minotaur = "2.9.0"
 curseforgegradle = "1.1.26"
 
 json5k = "0.3.0"
-ktoml = "0.6.0"
+ktoml = "0.7.1"
 
 [libraries]
 fabric-loom = { module = "fabric-loom:fabric-loom.gradle.plugin", version.ref = "fabric-loom" }

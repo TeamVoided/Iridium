@@ -22,7 +22,7 @@ open class BuildScriptExtension(val project: Project) {
         "fabric-api" to "*",
         "fabric-language-kotlin" to resolveVersion(Config.fabricLangKotlinVersion),
         "minecraft" to Config.majorMinecraftVersion,
-        "java" to ">=17"
+        "java" to ">=21"
     )
     private var isModParent = false
     private val modParent get() = if (!isModParent) Config.modId else null

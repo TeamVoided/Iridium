@@ -69,11 +69,19 @@ dependencies {
         MappingsType.CUSTOM -> {
             mappings(file(mappings.version!!))
         }
+
+        MappingsType.NONE -> {}
     }
 
-    modImplementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
-    if (!disableKotlin) modImplementation("net.fabricmc:fabric-language-kotlin:$fabricLangKotlinVersion")
+    if (MappingsType.NONE == mappings.type) {
+        implementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
+        implementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
+        if (!disableKotlin) implementation("net.fabricmc:fabric-language-kotlin:$fabricLangKotlinVersion")
+    } else {
+        modImplementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
+        modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
+        if (!disableKotlin) modImplementation("net.fabricmc:fabric-language-kotlin:$fabricLangKotlinVersion")
+    }
 }
 
 val buildScriptExtension: BuildScriptExtension = extensions.create("modSettings", BuildScriptExtension::class.java)

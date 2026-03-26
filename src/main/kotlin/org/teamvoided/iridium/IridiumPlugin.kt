@@ -26,20 +26,6 @@ class IridiumPlugin : Plugin<Project> {
         project.plugins.apply(LoomGradlePlugin::class)
         project.plugins.apply(BuildScriptPlugin::class)
 
-        /*
-        project.extensions.getByType(LoomGradleExtensionAPI::class).run {
-            runs {
-                create("testClient") {
-                    client()
-                }
-
-                create("testServer") {
-                    server()
-                }
-            }
-        }
-         */
-
         project.extensions.getByType(BuildScriptExtension::class).isModParent(true)
 
         project.tasks.withType(RemapJarTask::class.java) {
