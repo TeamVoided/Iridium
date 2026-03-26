@@ -2,8 +2,6 @@ package org.teamvoided.iridium.config
 
 import com.akuleshov7.ktoml.Toml
 import com.akuleshov7.ktoml.annotations.TomlComments
-import com.charleskorn.kaml.Yaml
-import com.charleskorn.kaml.YamlComment
 import io.github.xn32.json5k.Json5
 import io.github.xn32.json5k.SerialComment
 import kotlinx.serialization.*
@@ -21,7 +19,6 @@ object IridiumLoader {
     fun loadFrom(file: File, forceLoad: Boolean): Boolean {
         if (attemptLoad(Toml, File("${file}.toml"))) return true
         if (attemptLoad(Json5 { prettyPrint = true; indentationWidth = 2 }, File("${file}.json5"))) return true
-        if (attemptLoad(Yaml.default, File("${file}.yml"))) return true
         if (attemptLoad(Json { prettyPrint = true; prettyPrintIndent = "\t" }, File("${file}.json"))) return true
         if (forceLoad) {
             forceLoad(Toml, File("${file}.toml"))
@@ -54,7 +51,6 @@ object IridiumLoader {
 
     @Serializable
     data class Config(
-        @YamlComment("Yaml is been DEPRECATED, please switch to TOML")
         @SerialComment("Json5 is been DEPRECATED, please switch to TOML")
         var projectTitle: String,
         var modId: String,

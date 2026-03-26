@@ -9,7 +9,6 @@ curseforgegradle = "1.1.26"
 
 json5k = "0.3.0"
 ktoml = "0.6.0"
-kaml = "0.58.0"
 
 [libraries]
 fabric-loom = { module = "fabric-loom:fabric-loom.gradle.plugin", version.ref = "fabric-loom" }
@@ -19,7 +18,6 @@ curseforgegradle = { module = "net.darkhax.curseforgegradle:net.darkhax.cursefor
 kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 json5k = { module = "io.github.xn32:json5k", version.ref = "json5k" }
 ktoml = { module = "com.akuleshov7:ktoml-core", version.ref = "ktoml" }
-kaml = { module = "com.charleskorn.kaml:kaml", version.ref = "kaml" }
 
 [plugins]
 kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

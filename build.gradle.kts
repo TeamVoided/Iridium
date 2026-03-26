@@ -40,7 +40,6 @@ dependencies {
     implementation(libs.kotlinx.serialization)
     implementation(libs.json5k)
     implementation(libs.ktoml)
-    implementation(libs.kaml)
 
 }
 
