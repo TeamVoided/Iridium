@@ -78,9 +78,9 @@ dependencies {
         implementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
         if (!disableKotlin) implementation("net.fabricmc:fabric-language-kotlin:$fabricLangKotlinVersion")
     } else {
-        modImplementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
-        modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
-        if (!disableKotlin) modImplementation("net.fabricmc:fabric-language-kotlin:$fabricLangKotlinVersion")
+//        modImplementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
+//        modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
+//        if (!disableKotlin) modImplementation("net.fabricmc:fabric-language-kotlin:$fabricLangKotlinVersion")
     }
 }
 

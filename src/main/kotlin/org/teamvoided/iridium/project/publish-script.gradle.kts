@@ -1,6 +1,5 @@
 package org.teamvoided.iridium.project
 
-import org.gradle.configurationcache.extensions.capitalized
 import org.teamvoided.iridium.config.Config.authors
 import org.teamvoided.iridium.config.Config.githubRepo
 import org.teamvoided.iridium.config.Config.license
@@ -21,8 +20,8 @@ afterEvaluate {
             publishScriptExtension.publications().forEach {
                 if (!it.isSnapshot) return@forEach
 
-                dependsOn("publish${it.name.capitalized()}PublicationTo${publishScriptExtension.releaseRepository()!!.first}Repository")
-                dependsOn("publish${it.name.capitalized()}PublicationToMavenLocal")
+                dependsOn("publish${it.name.uppercase()}PublicationTo${publishScriptExtension.releaseRepository()!!.first}Repository")
+                dependsOn("publish${it.name.uppercase()}PublicationToMavenLocal")
             }
         }
     }

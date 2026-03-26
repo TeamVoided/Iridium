@@ -10,16 +10,8 @@ repositories {
     google()
 }
 
-tasks {
-    withType<KotlinCompile> {
-        kotlinOptions {
-            freeCompilerArgs += "-Xcontext-receivers"
-        }
-    }
-}
-
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(25)
 }
 
 java {
