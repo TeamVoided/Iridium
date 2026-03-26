@@ -33,55 +33,55 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:$minecraftVersion")
-    /*  when (mappings.type) {
-          MappingsType.MOJANG -> {
-              mappings(loom.officialMojangMappings())
-          }
+    when (mappings.type) {
+        MappingsType.MOJANG -> {
+            mappings(loom.officialMojangMappings())
+        }
 
-          MappingsType.YARN -> {
-              mappings("net.fabricmc:yarn:${mappings.version}")
-          }
+        MappingsType.YARN -> {
+            mappings("net.fabricmc:yarn:${mappings.version}")
+        }
 
-          MappingsType.PARCHMENT -> {
-              mappings(loom.layered {
-                  parchment("org.parchmentmc.data:parchment-${mappings.version}")
-              })
-          }
+        MappingsType.PARCHMENT -> {
+            mappings(loom.layered {
+                parchment("org.parchmentmc.data:parchment-${mappings.version}")
+            })
+        }
 
-          MappingsType.MOJPARCH -> {
-              mappings(loom.layered {
-                  parchment("org.parchmentmc.data:parchment-${mappings.version}")
-                  officialMojangMappings()
-              })
-          }
+        MappingsType.MOJPARCH -> {
+            mappings(loom.layered {
+                parchment("org.parchmentmc.data:parchment-${mappings.version}")
+                officialMojangMappings()
+            })
+        }
 
-          MappingsType.MOJYARN -> {
-              mappings(loom.layered {
-                  mappings("net.fabricmc:yarn:${mappings.version}")
-                  officialMojangMappings()
-              })
-          }
+        MappingsType.MOJYARN -> {
+            mappings(loom.layered {
+                mappings("net.fabricmc:yarn:${mappings.version}")
+                officialMojangMappings()
+            })
+        }
 
-          MappingsType.QUILT -> {
-              mappings("org.quiltmc:quilt-mappings:${mappings.version}:intermediary-v2")
-          }
+        MappingsType.QUILT -> {
+            mappings("org.quiltmc:quilt-mappings:${mappings.version}:intermediary-v2")
+        }
 
-          MappingsType.CUSTOM -> {
-              mappings(file(mappings.version!!))
-          }
+        MappingsType.CUSTOM -> {
+            mappings(file(mappings.version!!))
+        }
 
-          MappingsType.NONE -> {}
-      }*/
+        MappingsType.NONE -> {}
+    }
 
-//    if (MappingsType.NONE == mappings.type) {
-    implementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
-    implementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
-    if (!disableKotlin) implementation("net.fabricmc:fabric-language-kotlin:$fabricLangKotlinVersion")
-//    } else {
-//        modImplementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
-//        modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
-//        if (!disableKotlin) modImplementation("net.fabricmc:fabric-language-kotlin:$fabricLangKotlinVersion")
-//    }
+    if (MappingsType.NONE == mappings.type) {
+        implementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
+        implementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
+        if (!disableKotlin) implementation("net.fabricmc:fabric-language-kotlin:$fabricLangKotlinVersion")
+    } else {
+        modImplementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
+        modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
+        if (!disableKotlin) modImplementation("net.fabricmc:fabric-language-kotlin:$fabricLangKotlinVersion")
+    }
 }
 
 val buildScriptExtension: BuildScriptExtension = extensions.create("modSettings", BuildScriptExtension::class.java)

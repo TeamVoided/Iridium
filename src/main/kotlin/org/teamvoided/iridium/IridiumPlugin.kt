@@ -8,6 +8,7 @@ import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.getByType
 import org.teamvoided.iridium.config.Config
 import org.teamvoided.iridium.config.IridiumLoader
+import org.teamvoided.iridium.config.IridiumLoader.config
 import org.teamvoided.iridium.helper.DependencyHelper
 import org.teamvoided.iridium.mod.BuildScriptExtension
 import org.teamvoided.iridium.mod.BuildScriptPlugin
@@ -28,8 +29,10 @@ class IridiumPlugin : Plugin<Project> {
 
         project.extensions.getByType(BuildScriptExtension::class).isModParent(true)
 
-        project.tasks.withType(RemapJarTask::class.java) {
-            addNestedDependencies.set(true)
+        if (config.mappings.type != IridiumLoader.MappingsType.NONE) {
+            project.tasks.withType(RemapJarTask::class.java) {
+                addNestedDependencies.set(true)
+            }
         }
 
         project.afterEvaluate {

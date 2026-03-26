@@ -9,10 +9,16 @@ import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.tasks.TaskInputs
 import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.project
+import org.teamvoided.iridium.config.IridiumLoader
+import org.teamvoided.iridium.config.IridiumLoader.config
 import org.teamvoided.iridium.mod.UploadScriptExtension
 
 object DependencyHelper {
-    fun modProject(project: Project, path: String, dependencyType: DependencyType = DependencyType.REQUIRED): ProjectDependency {
+    fun modProject(
+        project: Project,
+        path: String,
+        dependencyType: DependencyType = DependencyType.REQUIRED,
+    ): ProjectDependency {
         addModrinthDependency(project, path, dependencyType)
 
         return project.dependencies.project(path, configuration = "namedElements")
@@ -22,17 +28,26 @@ object DependencyHelper {
         if (project.plugins.hasPlugin("iridium.mod.upload-script") && project.project(path).plugins.hasPlugin("iridium.mod.upload-script")) {
             val otherExtension = project.project(path).extensions["modrinthConfig"] as UploadScriptExtension
 
-            (project.extensions["modrinthConfig"] as UploadScriptExtension).modrinthDependency(otherExtension.modrinthId!!, dependencyType)
+            (project.extensions["modrinthConfig"] as UploadScriptExtension).modrinthDependency(
+                otherExtension.modrinthId!!,
+                dependencyType
+            )
         }
     }
 
-    fun jarInclude(project: Project, path: String, dependencyType: DependencyType = DependencyType.EMBEDDED): Dependency {
+    fun jarInclude(
+        project: Project,
+        path: String,
+        dependencyType: DependencyType = DependencyType.EMBEDDED,
+    ): Dependency {
         addModrinthDependency(project, path, dependencyType)
         val projectJar = project.project(":$path").tasks.getByName("remapJar").outputs.files.singleFile
 
-        project.tasks.getByName("remapJar") {
-            this as RemapJarTask
-            nestedJars.from(projectJar)
+        if (config.mappings.type != IridiumLoader.MappingsType.NONE) {
+            project.tasks.getByName("remapJar") {
+                this as RemapJarTask
+                nestedJars.from(projectJar)
+            }
         }
 
         return project.dependencies.add("implementation", project.dependencies.project("$path:", "namedElements"))!!
