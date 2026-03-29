@@ -1,61 +1,66 @@
 package org.teamvoided.iridium.mod
 
 import com.modrinth.minotaur.dependencies.DependencyType
-import org.teamvoided.iridium.config.Config.minecraftVersion
-import org.teamvoided.iridium.config.Config.projectState
-import org.teamvoided.iridium.config.Config.projectTitle
-import org.teamvoided.iridium.config.IridiumLoader.config
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
 
 
 plugins {
     kotlin("jvm")
 
-    id("fabric-loom")
     id("com.modrinth.minotaur")
     id("net.darkhax.curseforgegradle")
 }
 
-val uploadScriptExtension = extensions.create("uploadConfig", UploadScriptExtension::class.java)
+val uploadScript = extensions.create("uploadScript", UploadScriptExtension::class.java)
 
 afterEvaluate {
-    val modrinthId = uploadScriptExtension.modrinthId
-    val curseId = uploadScriptExtension.curseId?.trim()
+    val modrinthId = uploadScript.modrinthId
+    val curseId = uploadScript.curseId?.trim()
 
-    val modrinthDeps = uploadScriptExtension.modrinthDependencies()
-    val curseDeps = uploadScriptExtension.curseDependencies()
+    if ((modrinthId != null || curseId != null) && uploadScript.jarTask == null) {
+        println("[ERROR] No jar was found canceling task")
+        return@afterEvaluate
+    }
 
-    val versions: List<String> = if (uploadScriptExtension.versionOverrides.isNullOrEmpty()) listOf(minecraftVersion)
-    else uploadScriptExtension.versionOverrides!!
-    val name = if (uploadScriptExtension.versionName == null) "$projectTitle ${rootProject.version}"
-    else uploadScriptExtension.versionName
+    val modrinthDeps = uploadScript.modrinthDependencies()
+    val curseDeps = uploadScript.curseDependencies()
 
-    if (modrinthId == null) {
-        println("Property \"modrinthId\" not found. Skipping Modrinth...")
-    } else {
+    val versions: List<String> = uploadScript.version
+    if (versions.isEmpty()) {
+        println("[ERROR] Version list should not be empty")
+        return@afterEvaluate
+    }
+
+    val name = uploadScript.versionName
+    if (name == null) {
+        println("[ERROR] Version name should be null")
+        return@afterEvaluate
+    }
+
+
+
+    if (modrinthId != null) {
         modrinth {
             token.set(
-                uploadScriptExtension.customModrinthTokenProperty()
-                    ?: System.getProperty("MODRINTH_TOKEN")
-                    ?: "ERROR"
+                uploadScript.customModrinthTokenProperty ?: System.getProperty("MODRINTH_TOKEN") ?: "ERROR"
             )
 
             projectId.set(modrinthId)
             versionNumber.set(rootProject.version.toString())
-            versionType.set(projectState)
 
             gameVersions.set(versions)
             loaders.set(listOf("fabric"))
 
-            uploadFile.set(if (config.mappings.type.remaps()) tasks.remapJar.get() else tasks.jar.get())
+            uploadFile.set(uploadScript.jarTask)
 
-            if (uploadScriptExtension.autoAddDependsOn) autoAddDependsOn = true
+            if (uploadScript.autoAddDependsOn) autoAddDependsOn = true
             if (modrinthDeps.isNotEmpty()) dependencies.set(modrinthDeps)
 
             versionName = name
 
-            if (uploadScriptExtension.changeLog != null) changelog = uploadScriptExtension.changeLog
+            if (uploadScript.changelog != null) changelog = uploadScript.changelog
 
-            debugMode = uploadScriptExtension.debugMode
+            debugMode = uploadScript.debugMode
         }
 
         tasks.register("publishToModrinth") {
@@ -64,23 +69,15 @@ afterEvaluate {
         }
     }
 
-    if (curseId == null) {
-        println("Property \"curseId\" not found. Skipping CurseForge...")
-    } else {
-        tasks.register<net.darkhax.curseforgegradle.TaskPublishCurseForge>("publishToCurseForge") {
+    if (curseId != null) {
+        tasks.register<TaskPublishCurseForge>("publishToCurseForge") {
             group = "publishing"
-            apiToken = (
-                    uploadScriptExtension.customCurseTokenProperty()
-                        ?: System.getProperty("CURSE_FORGE_TOKEN")
-                        ?: "ERROR"
-                    )
-            debugMode = uploadScriptExtension.debugMode
+            apiToken =
+                (uploadScript.customCurseTokenProperty ?: System.getProperty("CURSE_FORGE_TOKEN") ?: "ERROR")
+            debugMode = uploadScript.debugMode
 
-            // The main file to upload
-            var jarFile = if (config.mappings.type.remaps()) tasks.remapJar.get() else tasks.jar.get()
-            upload(curseId, jarFile) {
+            upload(curseId, uploadScript.jarTask) {
                 displayName = name
-                releaseType = projectState
 
                 versions.forEach { gameVersions.add(it) }
                 addModLoader("Fabric")
@@ -95,7 +92,7 @@ afterEvaluate {
                     }
                 }
                 changelogType = "markdown"
-                changelog = if (uploadScriptExtension.changeLog != null) uploadScriptExtension.changeLog else " "
+                changelog = if (uploadScript.changelog != null) uploadScript.changelog else " "
             }
         }
     }

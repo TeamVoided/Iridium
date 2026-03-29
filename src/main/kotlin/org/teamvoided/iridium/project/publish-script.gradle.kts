@@ -1,8 +1,8 @@
 package org.teamvoided.iridium.project
 
-import org.teamvoided.iridium.config.Config.authors
-import org.teamvoided.iridium.config.Config.githubRepo
-import org.teamvoided.iridium.config.Config.license
+import org.teamvoided.iridium.config.IridiumProps.authors
+import org.teamvoided.iridium.config.IridiumProps.githubRepo
+import org.teamvoided.iridium.config.IridiumProps.license
 
 plugins {
     kotlin("jvm")
@@ -10,39 +10,46 @@ plugins {
     signing
 }
 
-val publishScriptExtension = extensions.create("publishScript", PublishScriptExtension::class.java, project)
+val publishScript = extensions.create("publishScript", PublishScriptExtension::class.java, project)
 
 afterEvaluate {
+    if (publishScript.releaseRepository() == null) return@afterEvaluate
+
     tasks {
-        create("publishSnapshots") {
+        register("publishSnapshots") {
             group = "publishing"
 
-            publishScriptExtension.publications().forEach {
+            publishScript.publications().forEach {
                 if (!it.isSnapshot) return@forEach
 
-                dependsOn("publish${it.name.uppercase()}PublicationTo${publishScriptExtension.releaseRepository()!!.first}Repository")
+                dependsOn("publish${it.name.uppercase()}PublicationTo${publishScript.releaseRepository()!!.first}Repository")
                 dependsOn("publish${it.name.uppercase()}PublicationToMavenLocal")
             }
         }
     }
 
     java {
-        if (publishScriptExtension.publishSources())
+        if (publishScript.publishSources) {
             withSourcesJar()
-        if (publishScriptExtension.publishJavadoc())
+        }
+        if (publishScript.publishJavadoc) {
             withJavadocJar()
+        }
     }
 
     publishing {
         repositories {
             maven {
-                val nameNullable = publishScriptExtension.releaseRepository()?.first
-                val urlNullable = publishScriptExtension.releaseRepository()?.second
+                val nameNullable = publishScript.releaseRepository()?.first
+                val urlNullable = publishScript.releaseRepository()?.second
                 if (nameNullable == null) println("[WARNING] Repository name is null!")
-                if (urlNullable == null) println("[WARNING] Repository url is null!")
+                if (urlNullable == null) {
+                    println("[WARNING] Repository url is null!")
+                    return@maven
+                }
 
                 name = nameNullable ?: ""
-                url = uri(urlNullable ?: "")
+                url = uri(urlNullable)
 
                 if (nameNullable != null) {
                     val usernameEnv = System.getProperty("${nameNullable}Username")
@@ -68,12 +75,14 @@ afterEvaluate {
 
         afterEvaluate {
             publications {
-                publishScriptExtension.publications().forEach {
-                    if (!it.isSnapshot && project.gradle.startParameter.taskNames.contains("publishSnapshots"))
+                publishScript.publications().forEach {
+                    if (!it.isSnapshot && project.gradle.startParameter.taskNames.contains("publishSnapshots")) {
                         return@forEach
+                    }
 
-                    if (it.isSnapshot && !project.gradle.startParameter.taskNames.contains("publishSnapshots"))
+                    if (it.isSnapshot && !project.gradle.startParameter.taskNames.contains("publishSnapshots")) {
                         return@forEach
+                    }
 
                     register<MavenPublication>(it.name) {
                         from(components["java"])
@@ -81,20 +90,15 @@ afterEvaluate {
                         this.groupId = project.group.toString()
                         this.artifactId = base.archivesName.get()
                         val versionStr = project.version.toString()
-                        this.version =
-                            if (it.isSnapshot)
-                                "$versionStr-SNAPSHOT"
-                            else versionStr
+                        this.version = if (it.isSnapshot) "$versionStr-SNAPSHOT" else versionStr
 
                         pom {
                             name.set(project.name)
                             description.set(project.description)
 
                             developers {
-                                authors.forEach {
-                                    developer {
-                                        name.set(it)
-                                    }
+                                if (authors.isNotEmpty()) {
+                                    authors.forEach { dev -> developer { name.set(dev) } }
                                 }
                             }
 

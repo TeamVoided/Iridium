@@ -1,13 +1,13 @@
 package org.teamvoided.iridium.project
 
 import org.gradle.api.Project
-import java.util.LinkedList
+import java.util.*
 
 open class PublishScriptExtension(val project: Project) {
     private var releaseRepository: Pair<String, String>? = null
     private val publications: LinkedList<GradlePublication> = LinkedList()
-    private var publishSources: Boolean = false
-    private var publishJavadoc: Boolean = false
+    var publishSources: Boolean = false
+    var publishJavadoc: Boolean = false
 
     fun releaseRepository() = releaseRepository
     fun releaseRepository(name: String, url: String) {
@@ -16,21 +16,8 @@ open class PublishScriptExtension(val project: Project) {
 
     fun publications() = publications
     fun publication(name: String, isSnapshot: Boolean) {
-        publications += GradlePublication(name, isSnapshot)
+        publications.add(GradlePublication(name, isSnapshot))
     }
 
-    fun publishSources() = publishSources
-    fun publishSources(publishSources: Boolean) {
-        this.publishSources = publishSources
-    }
-
-    fun publishJavadoc() = publishJavadoc
-    fun publishJavadoc(publishJavadoc: Boolean) {
-        this.publishJavadoc = publishJavadoc
-    }
-
-    data class GradlePublication(
-        val name: String,
-        val isSnapshot: Boolean,
-    )
+    data class GradlePublication(val name: String, val isSnapshot: Boolean)
 }

@@ -33,12 +33,10 @@ dependencies {
     compileOnly(pluginDep("org.jetbrains.kotlin.plugin.serialization", embeddedKotlinVersion))
     runtimeOnly(pluginDep("org.jetbrains.kotlin.plugin.serialization", kotlinVersion))
 
-    implementation(libs.fabric.loom)
     implementation(libs.modrinth.minotaur)
     implementation(libs.curseforgegradle)
 
     implementation(libs.kotlinx.serialization)
-    implementation(libs.json5k)
     implementation(libs.ktoml)
 
 }
